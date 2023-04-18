@@ -1,6 +1,9 @@
 package main
 
-import "EMIVN/internal/users"
+import (
+	"EMIVNTestTask/internal/users"
+	"fmt"
+)
 
 func main() {
 	samura1 := users.CreateSamurai("Samurai1_u", "Samurai1_n")
@@ -32,6 +35,6 @@ func main() {
 	daiMap[dai1.Nickname] = dai1
 	daiMap[dai2.Nickname] = dai2
 	sho.DaimyoList = daiMap
-
-	sho.CheckDaimyoInfo(&dai2)
+	temp := sho.CheckDaimyoInfo(&dai2)
+	fmt.Print(temp)
 }
