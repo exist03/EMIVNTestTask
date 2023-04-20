@@ -11,7 +11,7 @@ type Daimyo struct {
 }
 
 func (d *Daimyo) FillRemainingFunds(card *Card, sum float64) {
-	card.FundBalance = sum
+	card.Balance = sum
 }
 
 func (d *Daimyo) ShowSamuraiList() {

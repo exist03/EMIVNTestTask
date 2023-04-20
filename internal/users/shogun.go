@@ -21,7 +21,7 @@ func (s *Shogun) CheckDaimyoSamurais(daimyo *Daimyo) map[string]Samurai {
 }
 
 func (s *Shogun) CreateCard(info string) Card {
-	return Card{BankInfo: info, LimitInfo: 2000000, FundBalance: 2000000}
+	return Card{BankInfo: info, LimitInfo: 2000000, Balance: 2000000}
 }
 
 func (s *Shogun) SetLimit(card *Card, limit float64) {
@@ -37,8 +37,12 @@ func (s *Shogun) CheckDaimyoInfo(daimyo *Daimyo) string {
 	for _, v := range daimyo.SamuraiList {
 		mainTurnOver += v.TurnOver
 	}
-	//check if the work is good
-	res := fmt.Sprintf("TG Username: %s\nUsername: %s\nCards: %v\nSamurais: %v\nTurnover: %f", daimyo.TelegramUsername, daimyo.Nickname, daimyo.CardList, daimyo.SamuraiList, mainTurnOver)
+	//SAMURAI LIST IF NEED
+	//sList := ""
+	//for _, v := range daimyo.SamuraiList {
+	//	sList += fmt.Sprintf("Nickname: %s\nTG Username: %s\nTurnover: %f\nOwner: %s\n", v.Nickname, v.TelegramUsername, v.TurnOver, v.Owner.Nickname)
+	//}
+	res := fmt.Sprintf("TG Username: %s\nUsername: %s\nCards: %v\nTurnover: %f", daimyo.TelegramUsername, daimyo.Nickname, daimyo.CardList, mainTurnOver)
 	return res
 }
 
