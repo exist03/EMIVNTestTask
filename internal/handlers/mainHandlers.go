@@ -20,7 +20,7 @@ func InitHanders(b *tele.Bot, db *sql.DB) {
 		case "samurai":
 			return c.Send(initSamuraiHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		case "collector":
-
+			return c.Send(initCollectorHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		}
 		return c.Send("Incorrect message")
 	})
