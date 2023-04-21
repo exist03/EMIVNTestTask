@@ -48,7 +48,11 @@ func (m *SamuraiModel) GetList(nickname string) (string, error) {
 	return result, nil
 }
 
-//func (m *SamuraiModel) SetTurnover(val float64) string {
-//	stmt := `UPDATE Samurais SET TurnOver = ? WHERE Nickname = ?`
-//	_, err := m.DB.Exec(stmt, val)
-//}
+func (m *SamuraiModel) SetTurnover(id string, val float64) string {
+	stmt := `UPDATE Samurais SET TurnOver = ? WHERE Nickname = ?`
+	_, err := m.DB.Exec(stmt, val, id)
+	if err != nil {
+		return "Something went wrong"
+	}
+	return "Done"
+}
