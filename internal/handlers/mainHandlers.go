@@ -14,7 +14,7 @@ func InitHanders(b *tele.Bot, db *sql.DB) {
 		if sl[0] == "admin" {
 
 		} else if sl[0] == "shogun" {
-			return c.Send(initShogunHandlers(sl[1:]))
+			return c.Send(initShogunHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		} else if sl[0] == "daimyo" {
 			return c.Send(initDaimyoHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		} else if sl[0] == "samumrai" {

@@ -26,12 +26,6 @@ func (d *Daimyo) ShowCardList() {
 	}
 }
 
-//TODO
-// rebuild
-//func (d *Daimyo) CreateApplication(cardList []Card) []Card {
-//	return cardList
-//}
-
 func (d *Daimyo) CheckSamuraiTurnOver(samurai Samurai) float64 {
 	return samurai.TurnOver
 }
