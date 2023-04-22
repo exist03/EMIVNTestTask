@@ -33,3 +33,7 @@ func (d *Daimyo) CheckSamuraiTurnOver(samurai Samurai) float64 {
 func (d *Daimyo) SetOwner(shogun *Shogun) {
 	d.Owner = *shogun
 }
+
+func (d *Daimyo) Srting() string {
+	return fmt.Sprintf("Owner: %s\nTG Username: %s\nNickname: %s\n", d.Owner.Nickname, d.TelegramUsername, d.Nickname)
+}

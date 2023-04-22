@@ -14,7 +14,7 @@ func InitHanders(b *tele.Bot, db *sql.DB) {
 		case "admin":
 
 		case "shogun":
-
+			return c.Send(initShogunHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		case "daimyo":
 			return c.Send(initDaimyoHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		case "samurai":

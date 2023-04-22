@@ -3,6 +3,8 @@ package mysql
 import (
 	"EMIVNTestTask/internal/users"
 	"database/sql"
+	"fmt"
+	"log"
 )
 
 type DaimyoModel struct {
@@ -27,4 +29,33 @@ func (m *DaimyoModel) InsertApp(creater, cardID, sum string) string {
 		return "Something went wrong"
 	}
 	return "New application created"
+}
+
+func (m *DaimyoModel) GetList(owner string) (string, error) {
+	stmt := `SELECT TelegramUsername, Nickname FROM Daimyo WHERE Owner = ?`
+
+	rows, err := m.DB.Query(stmt, owner)
+	if err != nil {
+		log.Print(err)
+		return "err_sql_query", err
+	}
+	defer rows.Close()
+
+	var result string
+
+	for rows.Next() {
+		//s := &users.Daimyo{}
+		var telegramUsername string
+		var nickname string
+		err = rows.Scan(&telegramUsername, &nickname)
+		if err != nil {
+			return "err_scan", err
+		}
+		result += fmt.Sprintf("TG Username: %s\nNickname: %s", telegramUsername, nickname)
+	}
+
+	if err = rows.Err(); err != nil {
+		return "err3", err
+	}
+	return result, nil
 }
