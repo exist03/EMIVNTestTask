@@ -50,8 +50,47 @@ func initAdminHandlers(command []string, db *sql.DB, id string) string {
 			return "Something went wrong"
 		}
 		return "Done"
-	case "create_daimyo":
-
+	case "create_daimyo": //admin create_daimyo [Nickname] [TG username]
+		nickname := command[1]
+		username := command[2]
+		daimyo := users.Daimyo{
+			Owner:            "1",
+			TelegramUsername: username,
+			Nickname:         nickname,
+		}
+		daimyoModel := mysql.DaimyoModel{DB: db}
+		err := daimyoModel.Insert(daimyo)
+		if err != nil {
+			return "Something went wrong"
+		}
+		return "Done"
+	case "create_samurai": // admin create_samurai [Nickname] [TG username]
+		nickname := command[1]
+		username := command[2]
+		daimyo := users.Samurai{
+			Owner:            "1",
+			TelegramUsername: username,
+			Nickname:         nickname,
+		}
+		samuraiModel := mysql.SamuraiModel{DB: db}
+		err := samuraiModel.Insert(daimyo)
+		if err != nil {
+			return "Something went wrong"
+		}
+		return "Done"
+	case "create_collector":
+		nickname := command[1]
+		username := command[2]
+		daimyo := users.Collector{
+			TelegramUsername: username,
+			Nickname:         nickname,
+		}
+		collectorModel := mysql.CollectorModel{DB: db}
+		err := collectorModel.Insert(daimyo)
+		if err != nil {
+			return "Something went wrong"
+		}
+		return "Done"
 	}
 	return "_______"
 }
