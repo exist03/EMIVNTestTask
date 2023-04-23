@@ -5,7 +5,7 @@ import "fmt"
 type Daimyo struct {
 	CardList         []Card             //by nickname
 	SamuraiList      map[string]Samurai //same
-	Owner            Shogun
+	Owner            string
 	TelegramUsername string
 	Nickname         string
 }
@@ -30,10 +30,6 @@ func (d *Daimyo) CheckSamuraiTurnOver(samurai Samurai) float64 {
 	return samurai.TurnOver
 }
 
-func (d *Daimyo) SetOwner(shogun *Shogun) {
-	d.Owner = *shogun
-}
-
-func (d *Daimyo) Srting() string {
-	return fmt.Sprintf("Owner: %s\nTG Username: %s\nNickname: %s\n", d.Owner.Nickname, d.TelegramUsername, d.Nickname)
+func (d *Daimyo) SetOwner(owner string) {
+	d.Owner = owner
 }

@@ -28,8 +28,8 @@ func (s *Shogun) SetLimit(card *Card, limit float64) {
 	card.LimitInfo = limit
 }
 
-func (s *Shogun) SetCardOwner(card *Card, daimyo *Daimyo) {
-	card.Owner = *daimyo
+func (s *Shogun) SetCardOwner(card *Card, owner string) {
+	card.Owner = owner
 }
 
 func (s *Shogun) CheckDaimyoInfo(daimyo *Daimyo) string {

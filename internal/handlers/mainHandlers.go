@@ -12,7 +12,7 @@ func InitHanders(b *tele.Bot, db *sql.DB) {
 		sl := strings.Split(c.Text(), " ")
 		switch sl[0] {
 		case "admin":
-
+			return c.Send(initAdminHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		case "shogun":
 			return c.Send(initShogunHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
 		case "daimyo":

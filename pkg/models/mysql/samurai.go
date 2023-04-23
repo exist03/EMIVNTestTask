@@ -14,7 +14,7 @@ type SamuraiModel struct {
 func (m *SamuraiModel) Insert(samurai users.Samurai) error {
 	stmt := `INSERT INTO Samurais (Nickname, Owner, TurnOver, TelegramUsername) VALUES(?, ?, ?, ?)`
 
-	_, err := m.DB.Exec(stmt, samurai.Nickname, samurai.Owner.Nickname, samurai.TurnOver, samurai.TelegramUsername)
+	_, err := m.DB.Exec(stmt, samurai.Nickname, samurai.Owner, samurai.TurnOver, samurai.TelegramUsername)
 	if err != nil {
 		return err
 	}
@@ -51,6 +51,16 @@ func (m *SamuraiModel) GetList(nickname string) (string, error) {
 func (m *SamuraiModel) SetTurnover(id string, val float64) string {
 	stmt := `UPDATE Samurais SET TurnOver = ? WHERE Nickname = ?`
 	_, err := m.DB.Exec(stmt, val, id)
+	if err != nil {
+		return "Something went wrong"
+	}
+	return "Done"
+}
+
+func (m *SamuraiModel) SetOwner(cardID int, owner string) string {
+	stmt := `UPDATE Samurais SET Owner=? WHERE ID=?;`
+
+	_, err := m.DB.Exec(stmt, owner, cardID)
 	if err != nil {
 		return "Something went wrong"
 	}

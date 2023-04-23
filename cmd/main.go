@@ -25,7 +25,7 @@ func main() {
 	if err != nil {
 		panic("can`t create bot")
 	}
-	db, err := DB.OpenDB("quest:quest@/test")
+	db, err := DB.OpenDB("quest:quest@/EMIVN")
 	if err != nil {
 		log.Fatal(err)
 	}

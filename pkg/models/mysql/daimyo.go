@@ -15,7 +15,7 @@ func (m *DaimyoModel) Insert(daimyo users.Daimyo) error {
 	stmt := `INSERT INTO Daimyo (Nickname, Owner, TelegramUsername)
    VALUES(?, ?, ?)`
 
-	_, err := m.DB.Exec(stmt, daimyo.Nickname, daimyo.Owner.Nickname, daimyo.TelegramUsername)
+	_, err := m.DB.Exec(stmt, daimyo.Nickname, daimyo.Owner, daimyo.TelegramUsername)
 	if err != nil {
 		return err
 	}
@@ -58,4 +58,14 @@ func (m *DaimyoModel) GetList(owner string) (string, error) {
 		return "err3", err
 	}
 	return result, nil
+}
+
+func (m *DaimyoModel) SetOwner(cardID int, owner string) string {
+	stmt := `UPDATE Daimyo SET Owner=? WHERE ID=?;`
+
+	_, err := m.DB.Exec(stmt, owner, cardID)
+	if err != nil {
+		return "Something went wrong"
+	}
+	return "Done"
 }

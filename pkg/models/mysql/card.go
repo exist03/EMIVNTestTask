@@ -14,7 +14,7 @@ type CardModel struct {
 func (m *CardModel) Insert(card users.Card) error {
 	stmt := `INSERT INTO Cards (Owner, BankInfo, LimitInfo, Balance, ID) VALUES(?, ?, ?, ?, ?)`
 
-	_, err := m.DB.Exec(stmt, card.Owner.Nickname, card.BankInfo, card.LimitInfo, card.Balance, card.ID)
+	_, err := m.DB.Exec(stmt, card.Owner, card.BankInfo, card.LimitInfo, card.Balance, card.ID)
 	if err != nil {
 		return err
 	}
@@ -52,6 +52,16 @@ func (m *CardModel) Update(id int, balance float64) string {
 	stmt := `UPDATE Cards SET Balance=? WHERE ID=?;`
 
 	_, err := m.DB.Exec(stmt, balance, id)
+	if err != nil {
+		return "Something went wrong"
+	}
+	return "Done"
+}
+
+func (m *CardModel) SetOwner(cardID int, owner string) string {
+	stmt := `UPDATE Cards SET Owner=? WHERE ID=?;`
+
+	_, err := m.DB.Exec(stmt, owner, cardID)
 	if err != nil {
 		return "Something went wrong"
 	}
