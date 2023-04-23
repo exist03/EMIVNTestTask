@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+// TODO rewrite to many functions
 func initAdminHandlers(command []string, db *sql.DB, id string) string {
 	switch command[0] {
 	case "create_card": //admin create_card [cardID] [bankInfo] [LimitInfo] - optional
