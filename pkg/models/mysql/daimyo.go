@@ -60,10 +60,9 @@ func (m *DaimyoModel) GetList(owner string) (string, error) {
 	return result, nil
 }
 
-func (m *DaimyoModel) SetOwner(cardID int, owner string) string {
-	stmt := `UPDATE Daimyo SET Owner=? WHERE ID=?;`
-
-	_, err := m.DB.Exec(stmt, owner, cardID)
+func (m *DaimyoModel) SetOwner(ID string, owner string) string {
+	stmt := `UPDATE Daimyo SET Owner=? WHERE Nickname=?;`
+	_, err := m.DB.Exec(stmt, owner, ID)
 	if err != nil {
 		return "Something went wrong"
 	}

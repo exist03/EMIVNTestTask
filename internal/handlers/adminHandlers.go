@@ -92,6 +92,17 @@ func initAdminHandlers(command []string, db *sql.DB, id string) string {
 			return "Something went wrong"
 		}
 		return "Done"
+	case "set_daimyo_owner": //admin set_daimyo_owner [daimyo nickname] [shogun nickname]
+		daimyoID := command[1]
+		shogunID := command[2]
+		daimyoModel := mysql.DaimyoModel{DB: db}
+		daimyoModel.SetOwner(daimyoID, shogunID)
+		return "Done"
+	case "set_samurai_owner": //admin set_samurai_owner [samurai nickname] [daimyo nickname]
+		samuraiID := command[1]
+		daimyoID := command[2]
+		samuraiModel := mysql.SamuraiModel{DB: db}
+		samuraiModel.SetOwner(samuraiID, daimyoID)
 	}
-	return "_______"
+	return "Something went wrong"
 }

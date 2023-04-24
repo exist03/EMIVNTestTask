@@ -57,10 +57,10 @@ func (m *SamuraiModel) SetTurnover(id string, val float64) string {
 	return "Done"
 }
 
-func (m *SamuraiModel) SetOwner(cardID int, owner string) string {
-	stmt := `UPDATE Samurais SET Owner=? WHERE ID=?;`
+func (m *SamuraiModel) SetOwner(ID string, owner string) string {
 
-	_, err := m.DB.Exec(stmt, owner, cardID)
+	stmt := `UPDATE Samurais SET Owner=? WHERE Nickname=?;`
+	_, err := m.DB.Exec(stmt, owner, ID)
 	if err != nil {
 		return "Something went wrong"
 	}
