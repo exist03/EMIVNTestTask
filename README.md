@@ -47,3 +47,34 @@
  ⁃ Привязываются к даймё<br/>
  ⁃ Содержат информацию о банке эмитенте<br/>
  ⁃ Суточных лимитах ( По умолчанию 2 000 000 )<br/>
+ 
+ - Инструкция к использованию<br/>
+ - Администратор<br/>
+ - admin create_card [cardID] [bankInfo] {LimitInfo}<br/>
+ - admin connect_card [cardID] [owner]<br/>
+ - admin create_shogun [Nickname] [TG username]<br/>
+ - admin create_daimyo [Nickname] [TG username]<br/>
+ - admin create_samurai [Nickname] [TG username]<br/>
+ - admin create_collector [Nickname] [TG username]<br/>
+ - admin set_daimyo_owner [daimyo nickname] [shogun nickname]<br/>
+ - admin set_samurai_owner [samurai nickname] [daimyo nickname]<br/>
+ - admin get_shogun_info [shogunID]<br/>
+ - admin get_daimyo_info [daimyoID]<br/>
+ - admin get_samurai_info [samuraiID]<br/>
+ - admin get_collector_info [collectorID]<br/>
+ <br/>
+ - Сёгун<br/>
+ - shogun daimyos - Просмотр подчиненных(Даймё)<br/>
+ - shogun samurais [daimyo nickname] - Просмотр подчиненных самураев у конкретного даймё<br/>
+ - shogun create [cardID] [bankInfo] {LimitInfo}<br/>
+ - shogun connect [cardID] [owner] - Привезка карты к даймё по нику<br/>
+ - Дайме<br/>
+ - daimyo samurais<br/>
+ - daimyo set [cardID] [balance] - Остаток на карте<br/>
+ - daimyo cards<br/>
+ - daimyo application [cardID] [value] - Создание заявки на пополнение карты[cardID] до суммы [value]<br/>
+ - Самурай<br/>
+ - samurai turnover [value] - оборот за смену<br/>
+ - Инкассатор<br/>
+ - collector show - Показать запросы на пополнение
+ - collector apply [cardID] [value] - Выполнить апрос на пополнение
