@@ -10,12 +10,6 @@ type Shogun struct {
 	Nickname         string
 }
 
-func (s *Shogun) ShowDaimyoList() {
-	for _, v := range s.DaimyoList {
-		fmt.Print(v.Nickname)
-	}
-}
-
 func (s *Shogun) CheckDaimyoSamurais(daimyo *Daimyo) map[string]Samurai {
 	return daimyo.SamuraiList
 }
@@ -37,15 +31,14 @@ func (s *Shogun) CheckDaimyoInfo(daimyo *Daimyo) string {
 	for _, v := range daimyo.SamuraiList {
 		mainTurnOver += v.TurnOver
 	}
-	//SAMURAI LIST IF NEED
-	//sList := ""
-	//for _, v := range daimyo.SamuraiList {
-	//	sList += fmt.Sprintf("Nickname: %s\nTG Username: %s\nTurnover: %f\nOwner: %s\n", v.Nickname, v.TelegramUsername, v.TurnOver, v.Owner.Nickname)
-	//}
 	res := fmt.Sprintf("TG Username: %s\nUsername: %s\nCards: %v\nTurnover: %f", daimyo.TelegramUsername, daimyo.Nickname, daimyo.CardList, mainTurnOver)
 	return res
 }
 
 func (s *Shogun) CheckSamuraiInfo(daimyo *Daimyo, nickName string) float64 {
 	return daimyo.CheckSamuraiTurnOver(daimyo.SamuraiList[nickName])
+}
+
+func (s Shogun) String() string {
+	return fmt.Sprintf("TG Username: %s\nNickname: %s\n", s.TelegramUsername, s.Nickname)
 }

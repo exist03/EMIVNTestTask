@@ -68,3 +68,20 @@ func (m *DaimyoModel) SetOwner(ID string, owner string) string {
 	}
 	return "Done"
 }
+
+func (m *DaimyoModel) Get(nickname string) string {
+	stmt := `SELECT Owner, TelegramUsername, Nickname FROM Daimyo WHERE Nickname=?`
+	row := m.DB.QueryRow(stmt, nickname)
+	daimyo := users.Daimyo{}
+	row.Scan(&daimyo.Owner, &daimyo.TelegramUsername, &daimyo.Nickname)
+	result := fmt.Sprintf("%sSamurais:\n", daimyo)
+	stmt1 := `SELECT Nickname FROM Samurais WHERE Owner=?`
+	rows, _ := m.DB.Query(stmt1, nickname)
+	defer rows.Close()
+	for rows.Next() {
+		var temp string
+		rows.Scan(&temp)
+		result += fmt.Sprintf("%s ", temp)
+	}
+	return result
+}

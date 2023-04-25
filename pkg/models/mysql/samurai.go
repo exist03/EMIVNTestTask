@@ -66,3 +66,11 @@ func (m *SamuraiModel) SetOwner(ID string, owner string) string {
 	}
 	return "Done"
 }
+
+func (m *SamuraiModel) Get(nickname string) string {
+	stmt := `SELECT TurnOver, TelegramUsername, Owner, Nickname FROM Samurais WHERE Nickname=?`
+	row := m.DB.QueryRow(stmt, nickname)
+	samurai := users.Samurai{}
+	row.Scan(&samurai.TurnOver, &samurai.TelegramUsername, &samurai.Owner, &samurai.Nickname)
+	return fmt.Sprintf("%s\n", samurai)
+}

@@ -103,6 +103,34 @@ func initAdminHandlers(command []string, db *sql.DB, id string) string {
 		daimyoID := command[2]
 		samuraiModel := mysql.SamuraiModel{DB: db}
 		samuraiModel.SetOwner(samuraiID, daimyoID)
+	case "get_shogun_info": //admin get_shogun_info [shogunID]
+		if len(command) != 2 {
+			return "Wrong message"
+		}
+		shogunID := command[1]
+		shogunModel := mysql.ShogunModel{DB: db}
+		return shogunModel.Get(shogunID)
+	case "get_daimyo_info": //admin get_daimyo_info [daimyoID]
+		if len(command) != 2 {
+			return "Wrong message"
+		}
+		daimyoID := command[1]
+		daimyoModel := mysql.DaimyoModel{DB: db}
+		return daimyoModel.Get(daimyoID)
+	case "get_samurai_info": //admin get_samurai_info [samuraiID]
+		if len(command) != 2 {
+			return "Wrong message"
+		}
+		samuraiID := command[1]
+		samuraiModel := mysql.SamuraiModel{DB: db}
+		return samuraiModel.Get(samuraiID)
+	case "get_collector_info": //admin get_collector_info [collectorID]
+		if len(command) != 2 {
+			return "Wrong message"
+		}
+		collectorID := command[1]
+		collectorModel := mysql.CollectorModel{DB: db}
+		return collectorModel.Get(collectorID)
 	}
 	return "Something went wrong"
 }

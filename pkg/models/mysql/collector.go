@@ -59,3 +59,11 @@ func (m *CollectorModel) ApplyApplication(cardID int, balance float64) string {
 	m.DB.Query(stmtDelete, cardID)
 	return "DONE"
 }
+
+func (m *CollectorModel) Get(nickname string) string {
+	stmt := `SELECT TelegramUsername, Nickname FROM Collectors WHERE Nickname=?`
+	row := m.DB.QueryRow(stmt, nickname)
+	collector := users.Collector{}
+	row.Scan(&collector.TelegramUsername, collector.Nickname)
+	return fmt.Sprintf("%s\n", collector)
+}
