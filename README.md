@@ -49,6 +49,7 @@
  ⁃ Суточных лимитах ( По умолчанию 2 000 000 )<br/>
  
  - Инструкция к использованию<br/>
+ <br/>
  - Администратор<br/>
  - admin create_card [cardID] [bankInfo] {LimitInfo}<br/>
  - admin connect_card [cardID] [owner]<br/>
@@ -68,13 +69,16 @@
  - shogun samurais [daimyo nickname] - Просмотр подчиненных самураев у конкретного даймё<br/>
  - shogun create [cardID] [bankInfo] {LimitInfo}<br/>
  - shogun connect [cardID] [owner] - Привезка карты к даймё по нику<br/>
+ <br/>
  - Дайме<br/>
  - daimyo samurais<br/>
  - daimyo set [cardID] [balance] - Остаток на карте<br/>
  - daimyo cards<br/>
  - daimyo application [cardID] [value] - Создание заявки на пополнение карты[cardID] до суммы [value]<br/>
+ <br/>
  - Самурай<br/>
  - samurai turnover [value] - оборот за смену<br/>
+ <br/>
  - Инкассатор<br/>
  - collector show - Показать запросы на пополнение<br/>
  - collector apply [cardID] [value] - Выполнить апрос на пополнение<br/>
