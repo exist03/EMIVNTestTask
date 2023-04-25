@@ -8,11 +8,11 @@ import (
 
 func initCollectorHandlers(command []string, db *sql.DB, id string) string {
 	switch command[0] {
-	case "show":
+	case "show": //collector show
 		CollectorModel := mysql.CollectorModel{DB: db}
 		res := CollectorModel.ShowApplications()
 		return res
-	case "apply":
+	case "apply": //collector apply [cardID] [value]
 		CollectorModel := mysql.CollectorModel{DB: db}
 		cardID, err := strconv.Atoi(command[1])
 		if err != nil {
