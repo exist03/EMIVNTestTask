@@ -7,7 +7,7 @@ import (
 )
 
 func initSamuraiHandlers(command []string, db *sql.DB, id string) string {
-	if command[0] == "turnover" {
+	if command[0] == "turnover" { //samurai turnover [value]
 		samuraiModel := mysql.SamuraiModel{DB: db}
 		value, err := strconv.ParseFloat(command[1], 64)
 		if err != nil {
