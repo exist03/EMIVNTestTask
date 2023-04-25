@@ -76,5 +76,5 @@
  - Самурай<br/>
  - samurai turnover [value] - оборот за смену<br/>
  - Инкассатор<br/>
- - collector show - Показать запросы на пополнение
- - collector apply [cardID] [value] - Выполнить апрос на пополнение
+ - collector show - Показать запросы на пополнение<br/>
+ - collector apply [cardID] [value] - Выполнить апрос на пополнение<br/>
