@@ -79,7 +79,7 @@ func initAdminHandlers(command []string, db *sql.DB, id string) string {
 			return "Something went wrong"
 		}
 		return "Done"
-	case "create_collector":
+	case "create_collector": //admin create_collector [Nickname] [TG username]
 		nickname := command[1]
 		username := command[2]
 		daimyo := users.Collector{
