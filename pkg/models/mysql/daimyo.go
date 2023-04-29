@@ -32,7 +32,7 @@ func (m *DaimyoModel) InsertApp(creater, cardID, sum string) string {
 }
 
 func (m *DaimyoModel) GetList(owner string) (string, error) {
-	stmt := `SELECT TelegramUsername, Nickname FROM Daimyo WHERE Owner = ?`
+	stmt := `SELECT TelegramUsername, Nickname, Owner FROM Daimyo WHERE Owner = ?`
 
 	rows, err := m.DB.Query(stmt, owner)
 	if err != nil {
@@ -44,14 +44,15 @@ func (m *DaimyoModel) GetList(owner string) (string, error) {
 	var result string
 
 	for rows.Next() {
-		//s := &users.Daimyo{}
-		var telegramUsername string
-		var nickname string
-		err = rows.Scan(&telegramUsername, &nickname)
+		d := &users.Daimyo{}
+		//var telegramUsername string
+		//var nickname string
+		err = rows.Scan(&d.TelegramUsername, &d.Nickname, &d.Owner)
 		if err != nil {
 			return "err_scan", err
 		}
-		result += fmt.Sprintf("TG Username: %s\nNickname: %s", telegramUsername, nickname)
+		//result += fmt.Sprintf("TG Username: %s\nNickname: %s\n\n", telegramUsername, nickname)
+		result += fmt.Sprintf("%s", d)
 	}
 
 	if err = rows.Err(); err != nil {
