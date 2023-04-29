@@ -61,7 +61,7 @@ func (m *CollectorModel) ApplyApplication(cardID int, balance float64) string {
 }
 
 func (m *CollectorModel) Get(nickname string) string {
-	stmt := `SELECT TelegramUsername, Nickname FROM Collectors WHERE Nickname=?`
+	stmt := `SELECT TelegramUsername, Nickname FROM Collectors WHERE TelegramUsername=?`
 	row := m.DB.QueryRow(stmt, nickname)
 	collector := users.Collector{}
 	row.Scan(&collector.TelegramUsername, &collector.Nickname)

@@ -3,7 +3,7 @@ package users
 import "fmt"
 
 type Card struct {
-	ID        int
+	ID        string
 	Owner     string
 	BankInfo  string
 	LimitInfo float64
@@ -11,5 +11,5 @@ type Card struct {
 }
 
 func (c Card) String() string {
-	return fmt.Sprintf("\nOwner: %s\nBank-emitter: %s\nRemain funds: %.2f\nDaily limits: %.2f", c.Owner, c.BankInfo, c.Balance, c.LimitInfo)
+	return fmt.Sprintf("\n%s\nOwner: %s\nBank-emitter: %s\nRemain funds: %.2f\nDaily limits: %.2f\n", c.ID, c.Owner, c.BankInfo, c.Balance, c.LimitInfo)
 }

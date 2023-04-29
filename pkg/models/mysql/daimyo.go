@@ -61,7 +61,7 @@ func (m *DaimyoModel) GetList(owner string) (string, error) {
 }
 
 func (m *DaimyoModel) SetOwner(ID string, owner string) string {
-	stmt := `UPDATE Daimyo SET Owner=? WHERE Nickname=?;`
+	stmt := `UPDATE Daimyo SET Owner=? WHERE TelegramUsername=?;`
 	_, err := m.DB.Exec(stmt, owner, ID)
 	if err != nil {
 		return "Something went wrong"
@@ -69,14 +69,14 @@ func (m *DaimyoModel) SetOwner(ID string, owner string) string {
 	return "Done"
 }
 
-func (m *DaimyoModel) Get(nickname string) string {
-	stmt := `SELECT Owner, TelegramUsername, Nickname FROM Daimyo WHERE Nickname=?`
-	row := m.DB.QueryRow(stmt, nickname)
+func (m *DaimyoModel) Get(username string) string {
+	stmt := `SELECT Owner, TelegramUsername, Nickname FROM Daimyo WHERE TelegramUsername=?`
+	row := m.DB.QueryRow(stmt, username)
 	daimyo := users.Daimyo{}
 	row.Scan(&daimyo.Owner, &daimyo.TelegramUsername, &daimyo.Nickname)
 	result := fmt.Sprintf("%sSamurais:\n", daimyo)
-	stmt1 := `SELECT Nickname FROM Samurais WHERE Owner=?`
-	rows, _ := m.DB.Query(stmt1, nickname)
+	stmt1 := `SELECT TelegramUsername FROM Samurais WHERE Owner=?`
+	rows, _ := m.DB.Query(stmt1, username)
 	defer rows.Close()
 	for rows.Next() {
 		var temp string

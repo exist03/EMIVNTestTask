@@ -22,7 +22,7 @@ func (m *CardModel) Insert(card users.Card) error {
 }
 
 func (m *CardModel) GetList(nickname string) (string, error) {
-	stmt := `SELECT ID, BankInfo, LimitInfo, Balance FROM Cards WHERE Owner = ?`
+	stmt := `SELECT Owner, ID, BankInfo, LimitInfo, Balance FROM Cards WHERE Owner = ?`
 
 	rows, err := m.DB.Query(stmt, nickname)
 	if err != nil {
@@ -35,7 +35,7 @@ func (m *CardModel) GetList(nickname string) (string, error) {
 
 	for rows.Next() {
 		s := &users.Card{}
-		err = rows.Scan(&s.ID, &s.BankInfo, &s.LimitInfo, &s.Balance)
+		err = rows.Scan(&s.Owner, &s.ID, &s.BankInfo, &s.LimitInfo, &s.Balance)
 		if err != nil {
 			return "err_scan", err
 		}
@@ -58,7 +58,7 @@ func (m *CardModel) Update(id int, balance float64) string {
 	return "Done"
 }
 
-func (m *CardModel) SetOwner(cardID int, owner string) string {
+func (m *CardModel) SetOwner(cardID string, owner string) string {
 	stmt := `UPDATE Cards SET Owner=? WHERE ID=?;`
 
 	_, err := m.DB.Exec(stmt, owner, cardID)
