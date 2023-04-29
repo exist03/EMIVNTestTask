@@ -4,6 +4,7 @@ import (
 	"EMIVNTestTask/internal/users"
 	"EMIVNTestTask/pkg/models/mysql"
 	"database/sql"
+	"log"
 	"strconv"
 )
 
@@ -68,14 +69,15 @@ func initAdminHandlers(command []string, db *sql.DB, id string) string {
 	case "create_samurai": // admin create_samurai [Nickname] [TG username]
 		nickname := command[1]
 		username := command[2]
-		daimyo := users.Samurai{
+		samurai := users.Samurai{
 			Owner:            "1",
 			TelegramUsername: username,
 			Nickname:         nickname,
 		}
 		samuraiModel := mysql.SamuraiModel{DB: db}
-		err := samuraiModel.Insert(daimyo)
+		err := samuraiModel.Insert(samurai)
 		if err != nil {
+			log.Print(err)
 			return "Something went wrong"
 		}
 		return "Done"
@@ -103,6 +105,7 @@ func initAdminHandlers(command []string, db *sql.DB, id string) string {
 		daimyoID := command[2]
 		samuraiModel := mysql.SamuraiModel{DB: db}
 		samuraiModel.SetOwner(samuraiID, daimyoID)
+		return "Done"
 	case "get_shogun_info": //admin get_shogun_info [shogunID]
 		if len(command) != 2 {
 			return "Wrong message"

@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	tele "gopkg.in/telebot.v3"
-	"strconv"
 	"strings"
 )
 
@@ -25,27 +24,27 @@ func InitHanders(b *tele.Bot, db *sql.DB) {
 			if !validAdmin(db, senderID) {
 				return c.Send("You don`t have rights")
 			}
-			return c.Send(initAdminHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
+			return c.Send(initAdminHandlers(sl[1:], db, c.Sender().Username))
 		case "shogun":
 			if !validShogun(db, senderID) {
 				return c.Send("You don`t have rights")
 			}
-			return c.Send(initShogunHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
+			return c.Send(initShogunHandlers(sl[1:], db, c.Sender().Username))
 		case "daimyo":
 			if !validDaimyo(db, senderID) {
 				return c.Send("You don`t have rights")
 			}
-			return c.Send(initDaimyoHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
+			return c.Send(initDaimyoHandlers(sl[1:], db, c.Sender().Username))
 		case "samurai":
 			if !validSamurai(db, senderID) {
 				return c.Send("You don`t have rights")
 			}
-			return c.Send(initSamuraiHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
+			return c.Send(initSamuraiHandlers(sl[1:], db, c.Sender().Username))
 		case "collector":
 			if !validCollector(db, senderID) {
 				return c.Send("You don`t have rights")
 			}
-			return c.Send(initCollectorHandlers(sl[1:], db, strconv.Itoa(int(c.Sender().ID))))
+			return c.Send(initCollectorHandlers(sl[1:], db, c.Sender().Username))
 		}
 		return c.Send("Incorrect message")
 	})

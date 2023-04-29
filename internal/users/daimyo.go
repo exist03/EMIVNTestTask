@@ -26,9 +26,9 @@ func (d *Daimyo) ShowCardList() {
 	}
 }
 
-func (d *Daimyo) CheckSamuraiTurnOver(samurai Samurai) float64 {
-	return samurai.TurnOver
-}
+//func (d *Daimyo) CheckSamuraiTurnOver(samurai Samurai) float64 {
+//	return samurai.TurnOver
+//}
 
 func (d *Daimyo) SetOwner(owner string) {
 	d.Owner = owner

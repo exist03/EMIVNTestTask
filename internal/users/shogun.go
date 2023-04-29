@@ -26,18 +26,18 @@ func (s *Shogun) SetCardOwner(card *Card, owner string) {
 	card.Owner = owner
 }
 
-func (s *Shogun) CheckDaimyoInfo(daimyo *Daimyo) string {
-	var mainTurnOver float64
-	for _, v := range daimyo.SamuraiList {
-		mainTurnOver += v.TurnOver
-	}
-	res := fmt.Sprintf("TG Username: %s\nUsername: %s\nCards: %v\nTurnover: %f", daimyo.TelegramUsername, daimyo.Nickname, daimyo.CardList, mainTurnOver)
-	return res
-}
+//func (s *Shogun) CheckDaimyoInfo(daimyo *Daimyo) string {
+//	var mainTurnOver float64
+//	for _, v := range daimyo.SamuraiList {
+//		mainTurnOver += v.TurnOver
+//	}
+//	res := fmt.Sprintf("TG Username: %s\nUsername: %s\nCards: %v\nTurnover: %f", daimyo.TelegramUsername, daimyo.Nickname, daimyo.CardList, mainTurnOver)
+//	return res
+//}
 
-func (s *Shogun) CheckSamuraiInfo(daimyo *Daimyo, nickName string) float64 {
-	return daimyo.CheckSamuraiTurnOver(daimyo.SamuraiList[nickName])
-}
+//func (s *Shogun) CheckSamuraiInfo(daimyo *Daimyo, nickName string) float64 {
+//	return daimyo.CheckSamuraiTurnOver(daimyo.SamuraiList[nickName])
+//}
 
 func (s Shogun) String() string {
 	return fmt.Sprintf("TG Username: %s\nNickname: %s\n", s.TelegramUsername, s.Nickname)
