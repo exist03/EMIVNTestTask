@@ -50,7 +50,7 @@ func (m *SamuraiModel) GetList(nickname string) (string, error) {
 
 func (m *SamuraiModel) SetTurnover(id string, amount float64) string {
 	stmt := `INSERT INTO Turnovers (SamuraiUsername, Amount, Date) VALUES(?, ?, ?)`
-	_, err := m.DB.Exec(stmt, id, amount, time.Now().Format("15:04:05 02.01.2006"))
+	_, err := m.DB.Exec(stmt, id, amount, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return "Something went wrong"
 	}
