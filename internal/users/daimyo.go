@@ -35,5 +35,5 @@ func (d *Daimyo) SetOwner(owner string) {
 }
 
 func (d Daimyo) String() string {
-	return fmt.Sprintf("Owner: %s\nTG Username: %s\nNickname: %s\n", d.Owner, d.TelegramUsername, d.Nickname)
+	return fmt.Sprintf("TG Username: %s\nNickname: %s\nOwner: %s\n\n", d.TelegramUsername, d.Nickname, d.Owner)
 }

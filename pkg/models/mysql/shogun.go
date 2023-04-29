@@ -22,12 +22,12 @@ func (m *ShogunModel) Insert(shogun users.Shogun) error {
 }
 
 func (m *ShogunModel) Get(nickname string) string {
-	stmt := `SELECT TelegramUsername, Nickname FROM Shogun WHERE Nickname=?`
+	stmt := `SELECT TelegramUsername, Nickname FROM Shogun WHERE TelegramUsername=?`
 	row := m.DB.QueryRow(stmt, nickname)
 	shogun := users.Shogun{}
 	row.Scan(&shogun.TelegramUsername, &shogun.Nickname)
 	result := fmt.Sprintf("%sDaimyos:\n", shogun)
-	stmt1 := `SELECT Nickname FROM Daimyo WHERE Owner=?`
+	stmt1 := `SELECT TelegramUsername FROM Daimyo WHERE Owner=?`
 	rows, _ := m.DB.Query(stmt1, nickname)
 	defer rows.Close()
 	for rows.Next() {

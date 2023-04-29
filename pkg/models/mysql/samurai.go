@@ -22,7 +22,7 @@ func (m *SamuraiModel) Insert(samurai users.Samurai) error {
 }
 
 func (m *SamuraiModel) GetList(nickname string) (string, error) {
-	stmt := `SELECT Nickname, TelegramUsername FROM Samurais WHERE Owner = ?`
+	stmt := `SELECT Owner, Nickname, TelegramUsername FROM Samurais WHERE Owner = ?`
 
 	rows, err := m.DB.Query(stmt, nickname)
 	if err != nil {
@@ -35,7 +35,7 @@ func (m *SamuraiModel) GetList(nickname string) (string, error) {
 
 	for rows.Next() {
 		s := &users.Samurai{}
-		err = rows.Scan(&s.Nickname, &s.TelegramUsername)
+		err = rows.Scan(&s.Owner, &s.Nickname, &s.TelegramUsername)
 		if err != nil {
 			return "err_scan", err
 		}
@@ -52,6 +52,7 @@ func (m *SamuraiModel) SetTurnover(id string, amount float64) string {
 	stmt := `INSERT INTO Turnovers (SamuraiUsername, Amount, Date) VALUES(?, ?, ?)`
 	_, err := m.DB.Exec(stmt, id, amount, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
+		log.Print(err)
 		return "Something went wrong"
 	}
 	return "Done"

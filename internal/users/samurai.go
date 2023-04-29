@@ -17,5 +17,5 @@ func (s *Samurai) SetOwner(owner string) {
 }
 
 func (s Samurai) String() string {
-	return fmt.Sprintf("Nickname: %s\nTG Username: %s\nOwner: %s\n", s.Nickname, s.TelegramUsername, s.Owner)
+	return fmt.Sprintf("Owner: %s\nNickname: %s\nTG Username: %s\n\n", s.Owner, s.Nickname, s.TelegramUsername)
 }
