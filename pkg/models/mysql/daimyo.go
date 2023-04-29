@@ -70,12 +70,12 @@ func (m *DaimyoModel) SetOwner(ID string, owner string) string {
 }
 
 func (m *DaimyoModel) Get(nickname string) string {
-	stmt := `SELECT Owner, TelegramUsername, Nickname FROM Daimyo WHERE Nickname=?`
+	stmt := `SELECT Owner, TelegramUsername, Nickname FROM Daimyo WHERE TelegramUsername=?`
 	row := m.DB.QueryRow(stmt, nickname)
 	daimyo := users.Daimyo{}
 	row.Scan(&daimyo.Owner, &daimyo.TelegramUsername, &daimyo.Nickname)
 	result := fmt.Sprintf("%sSamurais:\n", daimyo)
-	stmt1 := `SELECT Nickname FROM Samurais WHERE Owner=?`
+	stmt1 := `SELECT TelegramUsername FROM Samurais WHERE Owner=?`
 	rows, _ := m.DB.Query(stmt1, nickname)
 	defer rows.Close()
 	for rows.Next() {
