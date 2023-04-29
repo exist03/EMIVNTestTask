@@ -49,7 +49,7 @@ func (m *SamuraiModel) GetList(nickname string) (string, error) {
 }
 
 func (m *SamuraiModel) SetTurnover(id string, val float64) string {
-	stmt := `UPDATE Samurais SET TurnOver = ? WHERE Nickname = ?`
+	stmt := `UPDATE Samurais SET TurnOver = ? WHERE TelegramUsername = ?`
 	_, err := m.DB.Exec(stmt, val, id)
 	if err != nil {
 		return "Something went wrong"
@@ -59,7 +59,7 @@ func (m *SamuraiModel) SetTurnover(id string, val float64) string {
 
 func (m *SamuraiModel) SetOwner(ID string, owner string) string {
 
-	stmt := `UPDATE Samurais SET Owner=? WHERE Nickname=?;`
+	stmt := `UPDATE Samurais SET Owner=? WHERE TelegramUsername=?;`
 	_, err := m.DB.Exec(stmt, owner, ID)
 	if err != nil {
 		return "Something went wrong"
@@ -68,7 +68,7 @@ func (m *SamuraiModel) SetOwner(ID string, owner string) string {
 }
 
 func (m *SamuraiModel) Get(nickname string) string {
-	stmt := `SELECT TurnOver, TelegramUsername, Owner, Nickname FROM Samurais WHERE Nickname=?`
+	stmt := `SELECT TurnOver, TelegramUsername, Owner, Nickname FROM Samurais WHERE TelegramUsername=?`
 	row := m.DB.QueryRow(stmt, nickname)
 	samurai := users.Samurai{}
 	row.Scan(&samurai.TurnOver, &samurai.TelegramUsername, &samurai.Owner, &samurai.Nickname)

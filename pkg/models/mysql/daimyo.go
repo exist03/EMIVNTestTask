@@ -75,7 +75,7 @@ func (m *DaimyoModel) Get(username string) string {
 	daimyo := users.Daimyo{}
 	row.Scan(&daimyo.Owner, &daimyo.TelegramUsername, &daimyo.Nickname)
 	result := fmt.Sprintf("%sSamurais:\n", daimyo)
-	stmt1 := `SELECT Nickname FROM Samurais WHERE Owner=?`
+	stmt1 := `SELECT TelegramUsername FROM Samurais WHERE Owner=?`
 	rows, _ := m.DB.Query(stmt1, username)
 	defer rows.Close()
 	for rows.Next() {
