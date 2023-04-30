@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -24,5 +25,27 @@ func (r *ReportModel) Samurai(id string, t time.Time) string {
 	rowOff := r.DB.QueryRow(stmtOff, id, t, t.Add(time.Hour*24))
 	rowEntranse.Scan(&entrance)
 	rowOff.Scan(&offs)
-	return fmt.Sprintf("Поступления: %.2f\nСписания: %.2f\n", entrance, offs)
+	//date cardid typeof operation
+	stmtOperations := `SELECT Date, CardID, OperationType, Amount FROM Transactions WHERE SamuraiUsername=? AND Date BETWEEN ? AND ?`
+	rows, err := r.DB.Query(stmtOperations, id, t, t.Add(time.Hour*24))
+	if err != nil {
+		log.Print(err)
+		return "err_sql_query"
+	}
+	defer rows.Close()
+	var (
+		d             string
+		cardID        string
+		operationType bool
+		amount        float64
+	)
+	var operations string
+	for rows.Next() {
+		err := rows.Scan(&d, &cardID, &operationType, &amount)
+		if err != nil {
+			log.Print(err)
+		}
+		operations += fmt.Sprintf("%19s | %10s | %v | %.2f\n", d, cardID, operationType, amount)
+	}
+	return fmt.Sprintf("Отчет за %v\nПоступления: %.2f\nСписания: %.2f\n%s\n", t.Format("2006-01-02"), entrance, offs, operations)
 }
