@@ -4,10 +4,7 @@ import (
 	"EMIVNTestTask/internal/keyboards"
 	"database/sql"
 	fsm "github.com/vitaliy-ukiru/fsm-telebot"
-	"github.com/vitaliy-ukiru/fsm-telebot/storages/memory"
 	tele "gopkg.in/telebot.v3"
-	"gopkg.in/telebot.v3/middleware"
-	"log"
 )
 
 const (
@@ -19,20 +16,17 @@ const (
 )
 
 var (
-	InputSG           = fsm.NewStateGroup("reg")
-	BeginShogunState  = InputSG.New("action")
-	InputAgeState     = InputSG.New("age")
-	InputHobbyState   = InputSG.New("hobby")
-	InputConfirmState = InputSG.New("confirm")
+	InputSG             = fsm.NewStateGroup("start")
+	BeginAdminState     = InputSG.New("startAdmin")
+	BeginShogunState    = InputSG.New("startShogun")
+	BeginDaimyoState    = InputSG.New("startDaimyo")
+	BeginSamuraiState   = InputSG.New("startSamurai")
+	BeginCollectorState = InputSG.New("startCollector")
 )
 
-func InitHandlers(bot *tele.Bot, db *sql.DB, manager *fsm.Manager) {
-	bot.Use(middleware.AutoRespond())
-	b := bot.Group()
-	storage := memory.NewStorage()
-	defer storage.Close()
-	manager := fsm.NewManager(b, storage)
-	beginHandlers(b, manager)
+func InitHandlers(bot *tele.Group, db *sql.DB, manager *fsm.Manager) {
+
+	beginHandlers(bot, manager, db)
 
 	//b.Handle(tele.OnText, func(c tele.Context) error {
 	//	sl := strings.Split(c.Text(), " ")
@@ -68,13 +62,14 @@ func InitHandlers(bot *tele.Bot, db *sql.DB, manager *fsm.Manager) {
 	//})
 }
 
-func beginHandlers(b *tele.Group, manager *fsm.Manager) {
+func beginHandlers(b *tele.Group, manager *fsm.Manager, db *sql.DB) {
 	b.Handle("/start", onStart())
 	manager.Bind("/state", fsm.AnyState, func(c tele.Context, state fsm.FSMContext) error {
 		s := state.State()
 		return c.Send(s.String())
 	})
-	manager.Bind(&keyboards.BtnDaimyo, fsm.AnyState, onStartDaimyo())
+	initDaiyoHandlers(manager, db)
+
 	//b.Handle(&keyboards.BtnAdmin, func(c tele.Context) error {
 	//	return c.Send(adminCommands)
 	//})
@@ -92,16 +87,9 @@ func beginHandlers(b *tele.Group, manager *fsm.Manager) {
 	//})
 }
 
-func onStart() tele.HandlerFunc {
-	return func(c tele.Context) error {
-		log.Println("new user", c.Sender().ID)
-		return c.Send("Choose", keyboards.StartKB())
-	}
-}
-
 func onStartDaimyo() fsm.Handler {
 	return func(c tele.Context, state fsm.FSMContext) error {
-		state.Set(BeginShogunState)
+		state.Set(BeginDaimyoState)
 		return c.Send("Выберите действие", keyboards.DaimyoKB())
 	}
 }

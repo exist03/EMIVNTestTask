@@ -48,7 +48,7 @@ func (m *CardModel) GetList(nickname string) (string, error) {
 	return result, nil
 }
 
-func (m *CardModel) Update(id int, balance float64) string {
+func (m *CardModel) Update(id interface{}, balance float64) string {
 	stmt := `UPDATE Cards SET Balance=? WHERE ID=?;`
 
 	_, err := m.DB.Exec(stmt, balance, id)

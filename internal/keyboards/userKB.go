@@ -4,12 +4,12 @@ import tele "gopkg.in/telebot.v3"
 
 var (
 	startMenu    = &tele.ReplyMarkup{ResizeKeyboard: true, RemoveKeyboard: true}
-	BtnAdmin     = tele.Btn{Text: "/admin"}
-	BtnShogun    = tele.Btn{Text: "/shogun"}
-	BtnDaimyo    = tele.Btn{Text: "/daimyo"}
-	BtnSamurai   = tele.Btn{Text: "/samurai"}
-	BtnCollector = tele.Btn{Text: "/collector"}
-	BtnCancel    = tele.Btn{Text: "Назад"}
+	BtnAdmin     = tele.Btn{Text: "Админ"}
+	BtnShogun    = tele.Btn{Text: "Сегун"}
+	BtnDaimyo    = tele.Btn{Text: "Дайме"}
+	BtnSamurai   = tele.Btn{Text: "Самурай🥷"}
+	BtnCollector = tele.Btn{Text: "Инкассатор💵"}
+	BtnCancel    = tele.Btn{Text: "❌ Отмена"}
 )
 
 func StartKB() *tele.ReplyMarkup {
