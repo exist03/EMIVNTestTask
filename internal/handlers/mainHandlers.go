@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	fsm "github.com/vitaliy-ukiru/fsm-telebot"
 	tele "gopkg.in/telebot.v3"
-	"log"
 )
 
 const (
@@ -20,7 +19,7 @@ var (
 	InputSG             = fsm.NewStateGroup("start")
 	BeginAdminState     = InputSG.New("startAdmin")
 	BeginShogunState    = InputSG.New("startShogun")
-	BeginDaimyoState    = InputSG.New("startShogun")
+	BeginDaimyoState    = InputSG.New("startDaimyo")
 	BeginSamuraiState   = InputSG.New("startSamurai")
 	BeginCollectorState = InputSG.New("startCollector")
 )
@@ -86,13 +85,6 @@ func beginHandlers(b *tele.Group, manager *fsm.Manager, db *sql.DB) {
 	//b.Handle(&keyboards.BtnCollector, func(c tele.Context) error {
 	//	return c.Send(collectorCommands)
 	//})
-}
-
-func onStart() tele.HandlerFunc {
-	return func(c tele.Context) error {
-		log.Println("new user", c.Sender().ID)
-		return c.Send("Choose", keyboards.StartKB())
-	}
 }
 
 func onStartDaimyo() fsm.Handler {

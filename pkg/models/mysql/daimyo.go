@@ -22,10 +22,11 @@ func (m *DaimyoModel) Insert(daimyo users.Daimyo) error {
 	return nil
 }
 
-func (m *DaimyoModel) InsertApp(creater, cardID, sum string) string {
+func (m *DaimyoModel) InsertApp(creater string, cardID interface{}, sum float64) string {
 	stmt := `INSERT INTO Applications (Daimyo, ID, Sum) VALUES(?, ?, ?)`
 	_, err := m.DB.Exec(stmt, creater, cardID, sum)
 	if err != nil {
+		log.Println(err)
 		return "Something went wrong"
 	}
 	return "New application created"
