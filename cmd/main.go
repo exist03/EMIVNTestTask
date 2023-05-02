@@ -31,6 +31,6 @@ func main() {
 	}
 	log.Printf("db is open")
 	defer db.Close()
-	handlers.InitHanders(b, db)
+	handlers.InitHandlers(b, db)
 	b.Start()
 }

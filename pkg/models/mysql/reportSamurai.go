@@ -11,6 +11,29 @@ type ReportModel struct {
 	DB *sql.DB
 }
 
+func (r *ReportModel) Samurais(daimyoID string, date time.Time) string {
+	stmt := `SELECT Turnovers.Amount, Turnovers.SamuraiUsername, Turnovers.Date FROM Turnovers JOIN Samurais S ON Turnovers.SamuraiUsername = S.TelegramUsername WHERE S.Owner=? AND (Turnovers.Date=? OR Turnovers.Date=?)`
+	rows, err := r.DB.Query(stmt, daimyoID, date, date.Add(time.Hour*(-24)))
+	if err != nil {
+		log.Printf("ReportModel.Samurais err = %v", err)
+		return "Something went wrong"
+	}
+	defer rows.Close()
+	result := ""
+	for rows.Next() {
+		var amount float64
+		var samuraiUsername string
+		var d string
+		err := rows.Scan(&amount, &samuraiUsername, &d)
+		if err != nil {
+			log.Print(err)
+			break
+		}
+		result += fmt.Sprintf("Оборот: %.2f | username: %s | date: %v\n", amount, samuraiUsername, d)
+	}
+	return result
+}
+
 func (r *ReportModel) Samurai(id string, t time.Time) string {
 	var (
 		//startAmount  float64 //сумма на начало смены

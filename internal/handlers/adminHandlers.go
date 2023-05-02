@@ -139,7 +139,7 @@ func initAdminHandlers(command []string, db *sql.DB, id string) string {
 		report := mysql.ReportModel{DB: db}
 		samuraiID := command[2]
 		time, _ := time2.Parse("2006-01-02", command[1])
-		return report.Samurai(samuraiID, time)
+		return report.Samurais(samuraiID, time)
 		//баланс на начало смены(8:00 dd.mm.yyyy)
 		//сумма поступлений в течении смены
 		//сумма списаний в течении смены
