@@ -21,7 +21,7 @@ func (m *SamuraiModel) Insert(samurai users.Samurai) error {
 	return nil
 }
 
-func (m *SamuraiModel) GetList(nickname string) (string, error) {
+func (m *SamuraiModel) GetList(nickname interface{}) (string, error) {
 	stmt := `SELECT Owner, Nickname, TelegramUsername FROM Samurais WHERE Owner = ?`
 
 	rows, err := m.DB.Query(stmt, nickname)

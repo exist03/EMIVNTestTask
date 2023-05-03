@@ -16,6 +16,7 @@ var (
 func DaimyoKB() *tele.ReplyMarkup {
 	daimyoMenu.Reply(
 		daimyoMenu.Row(BtnShowSamurais, BtnShowCards),
-		daimyoMenu.Row(BtnRemainingFunds, BtnCreateApplication))
+		daimyoMenu.Row(BtnRemainingFunds, BtnCreateApplication),
+		daimyoMenu.Row(BtnCancel))
 	return daimyoMenu
 }

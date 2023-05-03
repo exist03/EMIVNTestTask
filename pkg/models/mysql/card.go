@@ -58,9 +58,8 @@ func (m *CardModel) Update(id interface{}, balance float64) string {
 	return "Done"
 }
 
-func (m *CardModel) SetOwner(cardID string, owner string) string {
+func (m *CardModel) SetOwner(cardID interface{}, owner string) string {
 	stmt := `UPDATE Cards SET Owner=? WHERE ID=?;`
-
 	_, err := m.DB.Exec(stmt, owner, cardID)
 	if err != nil {
 		return "Something went wrong"

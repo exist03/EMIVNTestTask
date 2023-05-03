@@ -10,10 +10,6 @@ type Daimyo struct {
 	Nickname         string
 }
 
-func (d *Daimyo) FillRemainingFunds(card *Card, sum float64) {
-	card.Balance = sum
-}
-
 func (d *Daimyo) ShowSamuraiList() {
 	for _, v := range d.SamuraiList {
 		fmt.Print(v.Nickname)

@@ -12,7 +12,7 @@ import (
 
 var (
 	cardIDInputState    = InputSG.New("cardIDInputState")
-	cardIDInputStateApp = InputSG.New("cardIDInputState")
+	cardIDInputStateApp = InputSG.New("cardIDInputStateApp")
 	AmountInputState    = InputSG.New("AmountInputState")
 	AmountInputStateApp = InputSG.New("AmountInputStateApp")
 )
@@ -113,7 +113,6 @@ func onInputAmountApp(db *sql.DB) fsm.Handler {
 			return c.Send("Возникла ошибка")
 		}
 		res := daimyoModel.InsertApp(c.Sender().Username, cardID, amount)
-		log.Println(res)
 		return c.Send(res, keyboards.DaimyoKB())
 	}
 }

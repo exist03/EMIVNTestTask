@@ -20,3 +20,14 @@ func initSamuraiHandlers(command []string, db *sql.DB, id string) string {
 	}
 	return "Incorrect message"
 }
+
+func validSamurai(db *sql.DB, senderID string) bool {
+	var temp int
+	stmt := `SELECT COUNT(*) FROM Samurais WHERE TelegramUsername=?`
+	row := db.QueryRow(stmt, senderID)
+	row.Scan(&temp)
+	if temp == 0 {
+		return false
+	}
+	return true
+}

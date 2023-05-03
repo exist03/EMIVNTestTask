@@ -27,3 +27,14 @@ func initCollectorHandlers(command []string, db *sql.DB, id string) string {
 	}
 	return "Wrong message"
 }
+
+func validCollector(db *sql.DB, senderID string) bool {
+	var temp int
+	stmt := `SELECT COUNT(*) FROM Collectors WHERE TelegramUsername=?`
+	row := db.QueryRow(stmt, senderID)
+	row.Scan(&temp)
+	if temp == 0 {
+		return false
+	}
+	return true
+}

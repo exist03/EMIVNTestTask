@@ -3,11 +3,11 @@ package users
 import "fmt"
 
 type Card struct {
-	ID        string
+	ID        interface{}
 	Owner     string
-	BankInfo  string
-	LimitInfo float64
-	Balance   float64
+	BankInfo  interface{}
+	LimitInfo string
+	Balance   string
 }
 
 func (c Card) String() string {
