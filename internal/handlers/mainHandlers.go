@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"EMIVNTestTask/internal/keyboards"
 	"database/sql"
 	fsm "github.com/vitaliy-ukiru/fsm-telebot"
 	tele "gopkg.in/telebot.v3"
@@ -87,13 +86,6 @@ func beginHandlers(b *tele.Group, manager *fsm.Manager, db *sql.DB) {
 	//})
 }
 
-func onStartDaimyo() fsm.Handler {
-	return func(c tele.Context, state fsm.FSMContext) error {
-		state.Set(BeginDaimyoState)
-		return c.Send("Выберите действие", keyboards.DaimyoKB())
-	}
-}
-
 func validAdmin(db *sql.DB, senderID string) bool {
 	var temp int
 	stmt := `SELECT COUNT(*) FROM Admins WHERE TelegramUsername=?`
@@ -107,16 +99,6 @@ func validAdmin(db *sql.DB, senderID string) bool {
 func validShogun(db *sql.DB, senderID string) bool {
 	var temp int
 	stmt := `SELECT COUNT(*) FROM Shogun WHERE TelegramUsername=?`
-	row := db.QueryRow(stmt, senderID)
-	row.Scan(&temp)
-	if temp == 0 {
-		return false
-	}
-	return true
-}
-func validDaimyo(db *sql.DB, senderID string) bool {
-	var temp int
-	stmt := `SELECT COUNT(*) FROM Daimyo WHERE TelegramUsername=?`
 	row := db.QueryRow(stmt, senderID)
 	row.Scan(&temp)
 	if temp == 0 {

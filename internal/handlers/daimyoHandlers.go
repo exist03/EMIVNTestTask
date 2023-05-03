@@ -19,7 +19,7 @@ var (
 
 func initDaiyoHandlers(manager *fsm.Manager, db *sql.DB) {
 	//start buttons
-	manager.Bind(&keyboards.BtnDaimyo, fsm.DefaultState, onStartDaimyo())
+	manager.Bind(&keyboards.BtnDaimyo, fsm.DefaultState, onStartDaimyo(db))
 	manager.Bind(&keyboards.BtnShowSamurais, BeginDaimyoState, showSamurais(db))
 	manager.Bind(&keyboards.BtnShowCards, BeginDaimyoState, showCards(db))
 	//application
@@ -34,7 +34,16 @@ func initDaiyoHandlers(manager *fsm.Manager, db *sql.DB) {
 func onStart() tele.HandlerFunc {
 	return func(c tele.Context) error {
 		log.Println("new user", c.Sender().ID)
-		return c.Send("Choose", keyboards.StartKB())
+		return c.Send("Выберите", keyboards.StartKB())
+	}
+}
+func onStartDaimyo(db *sql.DB) fsm.Handler {
+	return func(c tele.Context, state fsm.FSMContext) error {
+		if !validDaimyo(db, c.Sender().Username) {
+			return c.Send("У вас нет прав")
+		}
+		state.Set(BeginDaimyoState)
+		return c.Send("Выберите действие", keyboards.DaimyoKB())
 	}
 }
 func showSamurais(db *sql.DB) fsm.Handler {
@@ -107,4 +116,14 @@ func onInputAmountApp(db *sql.DB) fsm.Handler {
 		log.Println(res)
 		return c.Send(res, keyboards.DaimyoKB())
 	}
+}
+func validDaimyo(db *sql.DB, senderID string) bool {
+	var temp int
+	stmt := `SELECT COUNT(*) FROM Daimyo WHERE TelegramUsername=?`
+	row := db.QueryRow(stmt, senderID)
+	row.Scan(&temp)
+	if temp == 0 {
+		return false
+	}
+	return true
 }
