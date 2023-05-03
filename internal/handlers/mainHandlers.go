@@ -81,9 +81,7 @@ func beginHandlers(b *tele.Group, manager *fsm.Manager, db *sql.DB) {
 	//b.Handle(&keyboards.BtnSamurai, func(c tele.Context) error {
 	//	return c.Send(samuraiCommands)
 	//})
-	//b.Handle(&keyboards.BtnCollector, func(c tele.Context) error {
-	//	return c.Send(collectorCommands)
-	//})
+
 }
 
 func validAdmin(db *sql.DB, senderID string) bool {
