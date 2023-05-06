@@ -62,7 +62,7 @@ func (m *DaimyoModel) GetList(owner string) (string, error) {
 	return result, nil
 }
 
-func (m *DaimyoModel) SetOwner(ID string, owner string) string {
+func (m *DaimyoModel) SetOwner(ID interface{}, owner string) string {
 	stmt := `UPDATE Daimyo SET Owner=? WHERE TelegramUsername=?;`
 	_, err := m.DB.Exec(stmt, owner, ID)
 	if err != nil {

@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	BeginDaimyoState    = InputSG.New("startDaimyo")
 	cardIDInputState    = InputSG.New("cardIDInputState")
 	cardIDInputStateApp = InputSG.New("cardIDInputStateApp")
 	AmountInputState    = InputSG.New("AmountInputState")

@@ -3,7 +3,7 @@ package users
 import "fmt"
 
 type Collector struct {
-	TelegramUsername string
+	TelegramUsername interface{}
 	Nickname         string
 }
 

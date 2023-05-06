@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	BeginShogunState   = InputSG.New("beginShogunState")
 	daimyoIDInputState = InputSG.New("daimyoIDInputState")
 	//card create
 	onInputCardCreateState = InputSG.New("onInputCardCreateState")
@@ -92,7 +93,7 @@ func onInputCardConnect(c tele.Context, state fsm.FSMContext) error {
 }
 func onInputCardOwner(db *sql.DB) fsm.Handler {
 	return func(c tele.Context, state fsm.FSMContext) error {
-		defer state.Set(BeginShogunState)
+		defer state.Set(fsm.DefaultState)
 		cardModel := mysql.CardModel{DB: db}
 		cardID, err := state.Get("cardID")
 		if err != nil {
@@ -100,7 +101,7 @@ func onInputCardOwner(db *sql.DB) fsm.Handler {
 			return c.Send("Произошла ошибка")
 		}
 		cardModel.SetOwner(cardID, c.Text())
-		return c.Send("Карта привязана", keyboards.ShogunKB())
+		return c.Send("Карта привязана", keyboards.StartKB())
 	}
 }
 
@@ -121,7 +122,7 @@ func onInputBank(c tele.Context, state fsm.FSMContext) error {
 }
 func onInputLimit(db *sql.DB) fsm.Handler {
 	return func(c tele.Context, state fsm.FSMContext) error {
-		defer state.Set(BeginShogunState)
+		defer state.Set(fsm.DefaultState)
 		cardModel := mysql.CardModel{DB: db}
 		cardID, err := state.Get("cardID")
 		if err != nil {
@@ -141,6 +142,6 @@ func onInputLimit(db *sql.DB) fsm.Handler {
 			Balance:   c.Text(),
 		}
 		cardModel.Insert(card)
-		return c.Send("Карта создана", keyboards.ShogunKB())
+		return c.Send("Карта создана", keyboards.StartKB())
 	}
 }

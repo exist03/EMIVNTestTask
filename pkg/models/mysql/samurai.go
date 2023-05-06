@@ -58,7 +58,7 @@ func (m *SamuraiModel) SetTurnover(id string, amount float64) string {
 	return "Done"
 }
 
-func (m *SamuraiModel) SetOwner(ID string, owner string) string {
+func (m *SamuraiModel) SetOwner(ID interface{}, owner string) string {
 	stmt := `UPDATE Samurais SET Owner=? WHERE TelegramUsername=?;`
 	_, err := m.DB.Exec(stmt, owner, ID)
 	if err != nil {

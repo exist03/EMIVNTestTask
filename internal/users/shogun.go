@@ -6,8 +6,8 @@ import (
 
 type Shogun struct {
 	DaimyoList       map[string]Daimyo
-	TelegramUsername string
-	Nickname         string
+	TelegramUsername interface{}
+	Nickname         interface{}
 }
 
 func (s Shogun) String() string {
