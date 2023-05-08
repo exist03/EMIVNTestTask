@@ -29,5 +29,5 @@ func InitHandlers(bot *tele.Group, db *sql.DB, manager *fsm.Manager) {
 	initShogunHandlers(manager, db)
 	initDaiyoHandlers(manager, db)
 	initSamuraiHandlers(manager, db)
-	//initCollectorHandlers(manager, db)
+	initCollectorHandlers(manager, db)
 }

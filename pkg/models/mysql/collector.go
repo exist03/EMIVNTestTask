@@ -35,7 +35,7 @@ func (m *CollectorModel) ShowApplications() string {
 	var result string
 	for rows.Next() {
 		var (
-			id     int
+			id     string
 			sum    float64
 			daimyo string
 		)
@@ -43,7 +43,7 @@ func (m *CollectorModel) ShowApplications() string {
 		if err != nil {
 			return "err_scan"
 		}
-		result += fmt.Sprintf("Daymo: %s\nCard id: %d\nSum: %.2f\n\n", daimyo, id, sum)
+		result += fmt.Sprintf("Daymo: %s\nCard id: %s\nSum: %.2f\n\n", daimyo, id, sum)
 	}
 	if err = rows.Err(); err != nil {
 		return "err3"
@@ -51,11 +51,14 @@ func (m *CollectorModel) ShowApplications() string {
 	return result
 }
 
-func (m *CollectorModel) ApplyApplication(cardID int, balance float64) string {
+func (m *CollectorModel) ApplyApplication(cardID interface{}, balance float64) string {
 	stmtDelete := `DELETE FROM Applications WHERE ID=?;`
-	stmtUpdate := `UPDATE Cards SET Balance = ? WHERE ID=?;`
-
-	m.DB.Query(stmtUpdate, balance, cardID)
+	stmtUpdate := `UPDATE Cards SET Balance = Balance + ? WHERE ID=?;`
+	_, err := m.DB.Query(stmtUpdate, balance, cardID)
+	if err != nil {
+		log.Println(err)
+		return "update err"
+	}
 	m.DB.Query(stmtDelete, cardID)
 	return "DONE"
 }
