@@ -8,9 +8,7 @@ import (
 )
 
 var (
-	InputSG             = fsm.NewStateGroup("start")
-	BeginSamuraiState   = InputSG.New("startSamurai")
-	BeginCollectorState = InputSG.New("startCollector")
+	InputSG = fsm.NewStateGroup("start")
 )
 
 func InitHandlers(bot *tele.Group, db *sql.DB, manager *fsm.Manager) {
@@ -21,7 +19,7 @@ func InitHandlers(bot *tele.Group, db *sql.DB, manager *fsm.Manager) {
 	})
 	manager.Bind("/cancel", fsm.AnyState, func(c tele.Context, state fsm.FSMContext) error {
 		state.Set(fsm.DefaultState)
-		return c.Send("Состояние обнулено")
+		return c.Send("Состояние обнулено", keyboards.StartKB())
 	})
 	manager.Bind(&keyboards.BtnCancel, fsm.AnyState, func(c tele.Context, state fsm.FSMContext) error {
 		state.Set(fsm.DefaultState)
@@ -30,6 +28,6 @@ func InitHandlers(bot *tele.Group, db *sql.DB, manager *fsm.Manager) {
 	initAdminHandlers(manager, db)
 	initShogunHandlers(manager, db)
 	initDaiyoHandlers(manager, db)
-	//initSamuraiHandlers(manager, db)
+	initSamuraiHandlers(manager, db)
 	//initCollectorHandlers(manager, db)
 }

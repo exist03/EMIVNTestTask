@@ -11,7 +11,7 @@ type ReportModel struct {
 	DB *sql.DB
 }
 
-func (r *ReportModel) Samurais(daimyoID string, date time.Time) string {
+func (r *ReportModel) Samurais(daimyoID interface{}, date time.Time) string {
 	stmt := `SELECT Turnovers.Amount, Turnovers.SamuraiUsername, Turnovers.Date FROM Turnovers JOIN Samurais S ON Turnovers.SamuraiUsername = S.TelegramUsername WHERE S.Owner=? AND (Turnovers.Date=? OR Turnovers.Date=?)`
 	rows, err := r.DB.Query(stmt, daimyoID, date, date.Add(time.Hour*(-24)))
 	if err != nil {

@@ -3,7 +3,13 @@ package handlers
 import (
 	"EMIVNTestTask/pkg/models/mysql"
 	"database/sql"
+	fsm "github.com/vitaliy-ukiru/fsm-telebot"
+	tele "gopkg.in/telebot.v3"
 	"strconv"
+)
+
+var (
+	BeginCollectorState = InputSG.New("startCollector")
 )
 
 func initCollectorHandlers(command []string, db *sql.DB, id string) string {
@@ -26,6 +32,16 @@ func initCollectorHandlers(command []string, db *sql.DB, id string) string {
 		return res
 	}
 	return "Wrong message"
+}
+
+func onStartCollector(db *sql.DB) fsm.Handler {
+	return func(c tele.Context, state fsm.FSMContext) error {
+		if !validCollector(db, c.Sender().Username) {
+			return c.Send("У вас нет прав")
+		}
+		state.Set(BeginCollectorState)
+		return c.Send("Выберите действие") //keyboards.collectorKB
+	}
 }
 
 func validCollector(db *sql.DB, senderID string) bool {

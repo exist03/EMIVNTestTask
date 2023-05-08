@@ -5,17 +5,12 @@ import (
 )
 
 var (
-	adminMenu  = &tele.ReplyMarkup{ResizeKeyboard: true}
-	BtnCreate  = tele.Btn{Text: "Создать"}
-	BtnConnect = tele.Btn{Text: "Привязать"}
-	//create
-	BtnCreateCard = tele.Btn{Text: "Создать карту💳"}
-	//connect
-	BtnAdditional     = tele.Btn{Text: "Подробнее"}
-	BtnConnectCard    = tele.Btn{Text: "Привязять карту💳"}
-	BtnConnectDaimyo  = tele.Btn{Text: "Дайме"}
-	BtnConnectSamurai = tele.Btn{Text: "Самурая🥷"}
-	//additional
+	adminMenu      = &tele.ReplyMarkup{ResizeKeyboard: true}
+	BtnCreate      = tele.Btn{Text: "Создать"}
+	BtnConnect     = tele.Btn{Text: "Привязать"}
+	BtnAdditional  = tele.Btn{Text: "Подробнее"}
+	BtnCreateCard  = tele.Btn{Text: "Создать карту💳"}
+	BtnConnectCard = tele.Btn{Text: "Привязять карту💳"}
 )
 
 func AdminKB() *tele.ReplyMarkup {
@@ -40,7 +35,7 @@ func AdminConnectKB() *tele.ReplyMarkup {
 
 func AdminAdditionalKB() *tele.ReplyMarkup {
 	adminMenu.Reply(
-		adminMenu.Row(BtnConnectCard, BtnConnectDaimyo, BtnConnectSamurai),
+		adminMenu.Row(BtnShogun, BtnDaimyo, BtnSamurai),
 		adminMenu.Row(BtnCancel))
 	return adminMenu
 }

@@ -10,9 +10,6 @@ var (
 	BtnCreateApplication = tele.Btn{Text: "Заявка на пополнение"}
 )
 
-//daimyo set [cardID] [balance] - Остаток на карте
-//- daimyo application [cardID] [value] - Создание заявки на пополнение карты[cardID] до суммы [value]
-
 func DaimyoKB() *tele.ReplyMarkup {
 	daimyoMenu.Reply(
 		daimyoMenu.Row(BtnShowSamurais, BtnShowCards),

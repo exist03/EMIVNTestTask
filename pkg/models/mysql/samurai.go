@@ -48,14 +48,14 @@ func (m *SamuraiModel) GetList(nickname interface{}) (string, error) {
 	return result, nil
 }
 
-func (m *SamuraiModel) SetTurnover(id string, amount float64) string {
+func (m *SamuraiModel) SetTurnover(id string, amount float64) error {
 	stmt := `INSERT INTO Turnovers (SamuraiUsername, Amount, Date) VALUES(?, ?, ?)`
 	_, err := m.DB.Exec(stmt, id, amount, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		log.Print(err)
-		return "Something went wrong"
+		return err
 	}
-	return "Done"
+	return nil
 }
 
 func (m *SamuraiModel) SetOwner(ID interface{}, owner string) string {
