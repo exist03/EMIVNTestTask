@@ -12,7 +12,7 @@ type CollectorModel struct {
 }
 
 func (m *CollectorModel) Insert(collector users.Collector) error {
-	stmt := `INSERT INTO Collectors (Nickname, TelegramUsername)
+	stmt := `INSERT INTO Collector (Nickname, TelegramUsername)
    VALUES(?, ?)`
 
 	_, err := m.DB.Exec(stmt, collector.Nickname, collector.TelegramUsername)
@@ -23,7 +23,7 @@ func (m *CollectorModel) Insert(collector users.Collector) error {
 }
 
 func (m *CollectorModel) ShowApplications() string {
-	stmt := `SELECT ID, Daimyo, SUM FROM Applications`
+	stmt := `SELECT ID, Daimyo, SUM FROM Application`
 
 	rows, err := m.DB.Query(stmt)
 	if err != nil {
@@ -52,8 +52,8 @@ func (m *CollectorModel) ShowApplications() string {
 }
 
 func (m *CollectorModel) ApplyApplication(cardID interface{}, balance float64) string {
-	stmtDelete := `DELETE FROM Applications WHERE ID=?;`
-	stmtUpdate := `UPDATE Cards SET Balance = Balance + ? WHERE ID=?;`
+	stmtDelete := `DELETE FROM Application WHERE ID=?;`
+	stmtUpdate := `UPDATE Card SET Balance = Balance + ? WHERE ID=?;`
 	_, err := m.DB.Query(stmtUpdate, balance, cardID)
 	if err != nil {
 		log.Println(err)
@@ -64,7 +64,7 @@ func (m *CollectorModel) ApplyApplication(cardID interface{}, balance float64) s
 }
 
 func (m *CollectorModel) Get(nickname string) string {
-	stmt := `SELECT TelegramUsername, Nickname FROM Collectors WHERE TelegramUsername=?`
+	stmt := `SELECT TelegramUsername, Nickname FROM Collector WHERE TelegramUsername=?`
 	row := m.DB.QueryRow(stmt, nickname)
 	collector := users.Collector{}
 	row.Scan(&collector.TelegramUsername, &collector.Nickname)

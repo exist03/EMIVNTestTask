@@ -11,28 +11,28 @@ type ReportModel struct {
 	DB *sql.DB
 }
 
-func (r *ReportModel) Samurais(daimyoID interface{}, date time.Time) string {
-	stmt := `SELECT Turnovers.Amount, Turnovers.SamuraiUsername, Turnovers.Date FROM Turnovers JOIN Samurais S ON Turnovers.SamuraiUsername = S.TelegramUsername WHERE S.Owner=? AND (Turnovers.Date=? OR Turnovers.Date=?)`
-	rows, err := r.DB.Query(stmt, daimyoID, date, date.Add(time.Hour*(-24)))
-	if err != nil {
-		log.Printf("ReportModel.Samurais err = %v", err)
-		return "Something went wrong"
-	}
-	defer rows.Close()
-	result := ""
-	for rows.Next() {
-		var amount float64
-		var samuraiUsername string
-		var d string
-		err := rows.Scan(&amount, &samuraiUsername, &d)
-		if err != nil {
-			log.Print(err)
-			break
-		}
-		result += fmt.Sprintf("Оборот: %.2f | username: %s | date: %v\n", amount, samuraiUsername, d)
-	}
-	return result
-}
+//func (r *ReportModel) Samurais(daimyoID interface{}, date time.Time) string {
+//	stmt := `SELECT Turnovers.Amount, Turnovers.SamuraiUsername, Turnovers.Date FROM Turnover JOIN Samurais S ON Turnovers.SamuraiUsername = S.TelegramUsername WHERE S.Owner=? AND (Turnovers.Date=? OR Turnovers.Date=?)`
+//	rows, err := r.DB.Query(stmt, daimyoID, date, date.Add(time.Hour*(-24)))
+//	if err != nil {
+//		log.Printf("ReportModel.Samurais err = %v", err)
+//		return "Something went wrong"
+//	}
+//	defer rows.Close()
+//	result := ""
+//	for rows.Next() {
+//		var amount float64
+//		var samuraiUsername string
+//		var d string
+//		err := rows.Scan(&amount, &samuraiUsername, &d)
+//		if err != nil {
+//			log.Print(err)
+//			break
+//		}
+//		result += fmt.Sprintf("Оборот: %.2f | username: %s | date: %v\n", amount, samuraiUsername, d)
+//	}
+//	return result
+//}
 
 func (r *ReportModel) Samurai(id string, t time.Time) string {
 	var (
@@ -42,14 +42,14 @@ func (r *ReportModel) Samurai(id string, t time.Time) string {
 		//finishAmount float64 // сумма на конец смены
 	)
 	t = t.Add(time.Hour * 8)
-	stmtEntrance := `SELECT SUM(Amount) FROM Transactions WHERE OperationType=1 AND SamuraiUsername=? AND Date BETWEEN ? AND ?`
-	stmtOff := `SELECT SUM(Amount) FROM Transactions WHERE OperationType=0 AND SamuraiUsername=? AND Date BETWEEN ? AND ?`
+	stmtEntrance := `SELECT SUM(Amount) FROM 'Transaction' WHERE OperationType=1 AND SamuraiUsername=? AND Date BETWEEN ? AND ?`
+	stmtOff := `SELECT SUM(Amount) FROM 'Transaction' WHERE OperationType=0 AND SamuraiUsername=? AND Date BETWEEN ? AND ?`
 	rowEntranse := r.DB.QueryRow(stmtEntrance, id, t, t.Add(time.Hour*24))
 	rowOff := r.DB.QueryRow(stmtOff, id, t, t.Add(time.Hour*24))
 	rowEntranse.Scan(&entrance)
 	rowOff.Scan(&offs)
 	//date cardid typeof operation
-	stmtOperations := `SELECT Date, CardID, OperationType, Amount FROM Transactions WHERE SamuraiUsername=? AND Date BETWEEN ? AND ?`
+	stmtOperations := `SELECT Date, CardID, OperationType, Amount FROM 'Transaction' WHERE SamuraiUsername=? AND Date BETWEEN ? AND ?`
 	rows, err := r.DB.Query(stmtOperations, id, t, t.Add(time.Hour*24))
 	if err != nil {
 		log.Print(err)

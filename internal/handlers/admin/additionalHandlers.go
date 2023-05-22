@@ -1,13 +1,12 @@
-package handlers
+package admin
 
 import (
+	"EMIVNTestTask/internal/handlers/states"
 	"EMIVNTestTask/internal/keyboards"
 	"EMIVNTestTask/pkg/models/mysql"
 	"database/sql"
 	fsm "github.com/vitaliy-ukiru/fsm-telebot"
 	tele "gopkg.in/telebot.v3"
-	"log"
-	"time"
 )
 
 //	case "get_samurai_info": //admin get_samurai_info [samuraiID]
@@ -19,10 +18,10 @@ import (
 //		return samuraiModel.Get(samuraiID)
 
 var (
-	onAdditionalShogunState          = InputSG.New("onAdditionalShogunState")
-	onAdditionalDaimyoState          = InputSG.New("onAdditionalDaimyoState")
-	onAdditionalSamuraiUsernameState = InputSG.New("onAdditionalSamuraiUsernameState")
-	onAdditionalSamuraiResState      = InputSG.New("onAdditionalSamuraiResState")
+	onAdditionalShogunState          = states.InputSG.New("onAdditionalShogunState")
+	onAdditionalDaimyoState          = states.InputSG.New("onAdditionalDaimyoState")
+	onAdditionalSamuraiUsernameState = states.InputSG.New("onAdditionalSamuraiUsernameState")
+	onAdditionalSamuraiResState      = states.InputSG.New("onAdditionalSamuraiResState")
 )
 
 func initAdditionalHandlers(manager *fsm.Manager, db *sql.DB) {
@@ -35,7 +34,7 @@ func initAdditionalHandlers(manager *fsm.Manager, db *sql.DB) {
 	//samurai
 	manager.Bind(&keyboards.BtnSamurai, onAdditionalState, onAdditionalSamurai)
 	manager.Bind(tele.OnText, onAdditionalSamuraiUsernameState, onAdditionalSamuraiUsername)
-	manager.Bind(tele.OnText, onAdditionalSamuraiResState, onAdditionalSamuraiRes(db))
+	//manager.Bind(tele.OnText, onAdditionalSamuraiResState, onAdditionalSamuraiRes(db))
 }
 
 func onAdditional(c tele.Context, state fsm.FSMContext) error {
@@ -79,19 +78,20 @@ func onAdditionalSamuraiUsername(c tele.Context, state fsm.FSMContext) error {
 	go state.Update("samuraiUsername", c.Text())
 	return c.Send("Введите дату в формате YYYY-MM-DD")
 }
-func onAdditionalSamuraiRes(db *sql.DB) fsm.Handler {
-	return func(c tele.Context, state fsm.FSMContext) error {
-		defer state.Set(beginAdminState)
-		report := mysql.ReportModel{DB: db}
-		samurai, err := state.Get("samuraiUsername")
-		date, err := time.Parse("2006-01-02", c.Text())
-		if err != nil {
-			log.Print(err)
-			return c.Send("Возникла ошибка")
-		}
-		return c.Send(report.Samurais(samurai, date), keyboards.AdminKB())
-	}
-}
+
+//func onAdditionalSamuraiRes(db *sql.DB) fsm.Handler {
+//	return func(c tele.Context, state fsm.FSMContext) error {
+//		defer state.Set(beginAdminState)
+//		report := mysql.ReportModel{DB: db}
+//		samurai, err := state.Get("samuraiUsername")
+//		date, err := time.Parse("2006-01-02", c.Text())
+//		if err != nil {
+//			log.Print(err)
+//			return c.Send("Возникла ошибка")
+//		}
+//		return c.Send(report.Samurais(samurai, date), keyboards.AdminKB())
+//	}
+//}
 
 //report := mysql.ReportModel{DB: db}
 //		time, _ := time2.Parse("2006-01-02", command[1])

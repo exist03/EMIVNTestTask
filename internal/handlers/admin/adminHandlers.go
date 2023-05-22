@@ -1,6 +1,7 @@
-package handlers
+package admin
 
 import (
+	"EMIVNTestTask/internal/handlers/states"
 	"EMIVNTestTask/internal/keyboards"
 	"database/sql"
 	fsm "github.com/vitaliy-ukiru/fsm-telebot"
@@ -8,13 +9,13 @@ import (
 )
 
 var (
-	beginAdminState   = InputSG.New("startAdmin")
-	onCreateState     = InputSG.New("onCreateState")
-	onConnectState    = InputSG.New("onConnectState")
-	onAdditionalState = InputSG.New("onAdditionalState")
+	beginAdminState   = states.InputSG.New("startAdmin")
+	onCreateState     = states.InputSG.New("onCreateState")
+	onConnectState    = states.InputSG.New("onConnectState")
+	onAdditionalState = states.InputSG.New("onAdditionalState")
 )
 
-func initAdminHandlers(manager *fsm.Manager, db *sql.DB) {
+func InitAdminHandlers(manager *fsm.Manager, db *sql.DB) {
 	//start buttons
 	manager.Bind(&keyboards.BtnAdmin, fsm.DefaultState, onStartAdmin(db))
 	//create
@@ -38,7 +39,7 @@ func onStartAdmin(db *sql.DB) fsm.Handler {
 }
 func validAdmin(db *sql.DB, senderID string) bool {
 	var temp int
-	stmt := `SELECT COUNT(*) FROM Admins WHERE TelegramUsername=?`
+	stmt := `SELECT COUNT(*) FROM Admin WHERE TelegramUsername=?`
 	row := db.QueryRow(stmt, senderID)
 	row.Scan(&temp)
 	if temp == 0 {

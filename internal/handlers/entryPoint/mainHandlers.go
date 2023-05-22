@@ -1,14 +1,16 @@
-package handlers
+package entryPoint
 
 import (
+	"EMIVNTestTask/internal/handlers/admin"
+	"EMIVNTestTask/internal/handlers/collector"
+	"EMIVNTestTask/internal/handlers/daimyo"
+	"EMIVNTestTask/internal/handlers/samurai"
+	"EMIVNTestTask/internal/handlers/shogun"
 	"EMIVNTestTask/internal/keyboards"
 	"database/sql"
 	fsm "github.com/vitaliy-ukiru/fsm-telebot"
 	tele "gopkg.in/telebot.v3"
-)
-
-var (
-	InputSG = fsm.NewStateGroup("start")
+	"log"
 )
 
 func InitHandlers(bot *tele.Group, db *sql.DB, manager *fsm.Manager) {
@@ -25,9 +27,15 @@ func InitHandlers(bot *tele.Group, db *sql.DB, manager *fsm.Manager) {
 		state.Set(fsm.DefaultState)
 		return c.Send("Выберите", keyboards.StartKB())
 	})
-	initAdminHandlers(manager, db)
-	initShogunHandlers(manager, db)
-	initDaiyoHandlers(manager, db)
-	initSamuraiHandlers(manager, db)
-	initCollectorHandlers(manager, db)
+	admin.InitAdminHandlers(manager, db)
+	shogun.InitShogunHandlers(manager, db)
+	daimyo.InitDaiyoHandlers(manager, db)
+	samurai.InitSamuraiHandlers(manager, db)
+	collector.InitCollectorHandlers(manager, db)
+}
+func onStart() tele.HandlerFunc {
+	return func(c tele.Context) error {
+		log.Println("new user", c.Sender().ID)
+		return c.Send("Выберите", keyboards.StartKB())
+	}
 }

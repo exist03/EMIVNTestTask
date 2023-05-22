@@ -13,7 +13,7 @@ type SamuraiModel struct {
 }
 
 func (m *SamuraiModel) Insert(samurai users.Samurai) error {
-	stmt := `INSERT INTO Samurais (Nickname, Owner, TelegramUsername) VALUES(?, ?, ?)`
+	stmt := `INSERT INTO Samurai (Nickname, Owner, TelegramUsername) VALUES(?, ?, ?)`
 	_, err := m.DB.Exec(stmt, samurai.Nickname, samurai.Owner, samurai.TelegramUsername)
 	if err != nil {
 		return err
@@ -21,36 +21,45 @@ func (m *SamuraiModel) Insert(samurai users.Samurai) error {
 	return nil
 }
 
-func (m *SamuraiModel) GetList(nickname interface{}) (string, error) {
-	stmt := `SELECT Owner, Nickname, TelegramUsername FROM Samurais WHERE Owner = ?`
+func (m *SamuraiModel) GetList(nickname interface{}) ([]string, error) {
+	stmt := `SELECT Owner, Nickname, TelegramUsername FROM Samurai WHERE Owner = ?`
 
 	rows, err := m.DB.Query(stmt, nickname)
 	if err != nil {
 		log.Print(err)
-		return "err_sql_query", err
+		return nil, err
 	}
 	defer rows.Close()
 
-	var result string
+	var result []string
 
 	for rows.Next() {
 		s := &users.Samurai{}
 		err = rows.Scan(&s.Owner, &s.Nickname, &s.TelegramUsername)
 		if err != nil {
-			return "err_scan", err
+			return nil, err
 		}
-		result += fmt.Sprintf("%s", s)
+		result = append(result, fmt.Sprintf("%s", s))
 	}
 
 	if err = rows.Err(); err != nil {
-		return "err3", err
+		return nil, err
 	}
 	return result, nil
 }
 
-func (m *SamuraiModel) SetTurnover(id string, amount float64) error {
-	stmt := `INSERT INTO Turnovers (SamuraiUsername, Amount, Date) VALUES(?, ?, ?)`
-	_, err := m.DB.Exec(stmt, id, amount, time.Now().Format("2006-01-02 15:04:05"))
+func (m *SamuraiModel) SetTurnoverBegin(id string, bankName interface{}, amount float64) error {
+	stmt := `INSERT INTO TurnoverBegin (SamuraiUsername, Bank, Amount, Date) VALUES(?, ?, ?, ?)`
+	_, err := m.DB.Exec(stmt, id, bankName, amount, time.Now().Format("2006-01-02 15:04:05"))
+	if err != nil {
+		log.Print(err)
+		return err
+	}
+	return nil
+}
+func (m *SamuraiModel) SetTurnoverEnd(id string, bankName interface{}, amount float64) error {
+	stmt := `INSERT INTO TurnoverEnd (SamuraiUsername, Bank, Amount, Date) VALUES(?, ?, ?, ?)`
+	_, err := m.DB.Exec(stmt, id, bankName, amount, time.Now().Add(-24*time.Hour).Format("2006-01-02 15:04:05"))
 	if err != nil {
 		log.Print(err)
 		return err
@@ -59,7 +68,7 @@ func (m *SamuraiModel) SetTurnover(id string, amount float64) error {
 }
 
 func (m *SamuraiModel) SetOwner(ID interface{}, owner string) string {
-	stmt := `UPDATE Samurais SET Owner=? WHERE TelegramUsername=?;`
+	stmt := `UPDATE Samurai SET Owner=? WHERE TelegramUsername=?;`
 	_, err := m.DB.Exec(stmt, owner, ID)
 	if err != nil {
 		log.Print(err)

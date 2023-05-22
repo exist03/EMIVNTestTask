@@ -1,6 +1,8 @@
-package handlers
+package admin
 
 import (
+	"EMIVNTestTask/internal/handlers/shogun"
+	"EMIVNTestTask/internal/handlers/states"
 	"EMIVNTestTask/internal/keyboards"
 	"EMIVNTestTask/internal/users"
 	"EMIVNTestTask/pkg/models/mysql"
@@ -11,22 +13,22 @@ import (
 )
 
 var (
-	onCreateShogunUsernameState    = InputSG.New("onCreateShogunUsernameState")
-	onCreateShogunNicknameState    = InputSG.New("onCreateShogunNicknameState")
-	onCreateDaimyoUsernameState    = InputSG.New("onCreateDaimyoUsernameState")
-	onCreateDaimyoNicknameState    = InputSG.New("onCreateDaimyoNicknameState")
-	onCreateSamuraiUsernameState   = InputSG.New("onCreateSamuraiUsernameState")
-	onCreateSamuraiNicknameState   = InputSG.New("onCreateSamuraiNicknameState")
-	onCreateCollectorUsernameState = InputSG.New("onCreateCollectorUsernameState")
-	onCreateCollectorNicknameState = InputSG.New("onCreateCollectorNicknameState")
+	onCreateShogunUsernameState    = states.InputSG.New("onCreateShogunUsernameState")
+	onCreateShogunNicknameState    = states.InputSG.New("onCreateShogunNicknameState")
+	onCreateDaimyoUsernameState    = states.InputSG.New("onCreateDaimyoUsernameState")
+	onCreateDaimyoNicknameState    = states.InputSG.New("onCreateDaimyoNicknameState")
+	onCreateSamuraiUsernameState   = states.InputSG.New("onCreateSamuraiUsernameState")
+	onCreateSamuraiNicknameState   = states.InputSG.New("onCreateSamuraiNicknameState")
+	onCreateCollectorUsernameState = states.InputSG.New("onCreateCollectorUsernameState")
+	onCreateCollectorNicknameState = states.InputSG.New("onCreateCollectorNicknameState")
 )
 
 func initCreatingHandlers(manager *fsm.Manager, db *sql.DB) {
 	//create card
-	manager.Bind(&keyboards.BtnCreateCard, onCreateState, onCreateCard)
-	manager.Bind(tele.OnText, onInputCardCreateState, onInputCardCreate)
-	manager.Bind(tele.OnText, onInputBankState, onInputBank)
-	manager.Bind(tele.OnText, onInputLimitState, onInputLimit(db))
+	manager.Bind(&keyboards.BtnCreateCard, onCreateState, shogun.OnCreateCard)
+	manager.Bind(tele.OnText, shogun.OnInputCardCreateState, shogun.OnInputCardCreate)
+	manager.Bind(tele.OnText, shogun.OnInputBankState, shogun.OnInputBank)
+	manager.Bind(tele.OnText, shogun.OnInputLimitState, shogun.OnInputLimit(db))
 	//create shogun
 	manager.Bind(&keyboards.BtnShogun, onCreateState, onCreateShogun)
 	manager.Bind(tele.OnText, onCreateShogunUsernameState, onCreateShogunUsername)

@@ -1,6 +1,7 @@
-package handlers
+package collector
 
 import (
+	"EMIVNTestTask/internal/handlers/states"
 	"EMIVNTestTask/internal/keyboards"
 	"EMIVNTestTask/pkg/models/mysql"
 	"database/sql"
@@ -10,16 +11,16 @@ import (
 )
 
 var (
-	BeginCollectorState = InputSG.New("startCollector")
-	onInputCardIDState  = InputSG.New("onInputCardIDState")
-	OnInputAmountState  = InputSG.New("OnInputAmountState")
+	BeginCollectorState = states.InputSG.New("startCollector")
+	onInputCardIDState  = states.InputSG.New("onInputCardIDState")
+	OnInputAmountState  = states.InputSG.New("OnInputAmountState")
 )
 
 //
 //
 //		return res
 
-func initCollectorHandlers(manager *fsm.Manager, db *sql.DB) {
+func InitCollectorHandlers(manager *fsm.Manager, db *sql.DB) {
 	manager.Bind(&keyboards.BtnCollector, fsm.DefaultState, onStartCollector(db))
 	//show
 	manager.Bind(&keyboards.BtnShowApplications, BeginCollectorState, onShow(db))
@@ -74,7 +75,7 @@ func onStartCollector(db *sql.DB) fsm.Handler {
 }
 func validCollector(db *sql.DB, senderID string) bool {
 	var temp int
-	stmt := `SELECT COUNT(*) FROM Collectors WHERE TelegramUsername=?`
+	stmt := `SELECT COUNT(*) FROM Collector WHERE TelegramUsername=?`
 	row := db.QueryRow(stmt, senderID)
 	row.Scan(&temp)
 	if temp == 0 {

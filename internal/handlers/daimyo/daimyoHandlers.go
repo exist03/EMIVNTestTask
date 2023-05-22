@@ -1,6 +1,7 @@
-package handlers
+package daimyo
 
 import (
+	"EMIVNTestTask/internal/handlers/states"
 	"EMIVNTestTask/internal/keyboards"
 	"EMIVNTestTask/pkg/models/mysql"
 	"database/sql"
@@ -8,35 +9,36 @@ import (
 	tele "gopkg.in/telebot.v3"
 	"log"
 	"strconv"
+	"time"
 )
 
 var (
-	BeginDaimyoState    = InputSG.New("startDaimyo")
-	cardIDInputState    = InputSG.New("cardIDInputState")
-	cardIDInputStateApp = InputSG.New("cardIDInputStateApp")
-	AmountInputState    = InputSG.New("AmountInputState")
-	AmountInputStateApp = InputSG.New("AmountInputStateApp")
+	BeginDaimyoState    = states.InputSG.New("startDaimyo")
+	cardIDInputState    = states.InputSG.New("cardIDInputState")
+	cardIDInputStateApp = states.InputSG.New("cardIDInputStateApp")
+	AmountInputState    = states.InputSG.New("AmountInputState")
+	AmountInputStateApp = states.InputSG.New("AmountInputStateApp")
 )
 
-func initDaiyoHandlers(manager *fsm.Manager, db *sql.DB) {
-	//start buttons
+func InitDaiyoHandlers(manager *fsm.Manager, db *sql.DB) {
 	manager.Bind(&keyboards.BtnDaimyo, fsm.DefaultState, onStartDaimyo(db))
-	manager.Bind(&keyboards.BtnShowSamurais, BeginDaimyoState, showSamurais(db))
-	manager.Bind(&keyboards.BtnShowCards, BeginDaimyoState, showCards(db))
+
+	//start buttons
+	manager.Bind(&keyboards.BtnHierarchy, BeginDaimyoState, onHierarchy)
+	manager.Bind(&keyboards.BtnReport, BeginDaimyoState, onReport)
+	manager.Bind(&keyboards.BtnCardLimit, BeginDaimyoState, cardLimit(db))
+	initHierarchyHandlers(manager, db)
+	initReportHandlers(manager, db)
 	//application
 	manager.Bind(&keyboards.BtnCreateApplication, BeginDaimyoState, beginApp)
 	manager.Bind(tele.OnText, cardIDInputStateApp, onInputCardApp)
 	manager.Bind(tele.OnText, AmountInputStateApp, onInputAmountApp(db))
+	//card limit
+	manager.Bind(&keyboards.BtnHierarchy, BeginDaimyoState, onHierarchy)
 	//remaining
 	manager.Bind(&keyboards.BtnRemainingFunds, BeginDaimyoState, remainingFunds)
 	manager.Bind(tele.OnText, cardIDInputState, onInputCard)
 	manager.Bind(tele.OnText, AmountInputState, onInputAmount(db))
-}
-func onStart() tele.HandlerFunc {
-	return func(c tele.Context) error {
-		log.Println("new user", c.Sender().ID)
-		return c.Send("Выберите", keyboards.StartKB())
-	}
 }
 func onStartDaimyo(db *sql.DB) fsm.Handler {
 	return func(c tele.Context, state fsm.FSMContext) error {
@@ -47,20 +49,40 @@ func onStartDaimyo(db *sql.DB) fsm.Handler {
 		return c.Send("Выберите действие", keyboards.DaimyoKB())
 	}
 }
-func showSamurais(db *sql.DB) fsm.Handler {
-	samuraiModel := mysql.SamuraiModel{DB: db}
-	return func(c tele.Context, state fsm.FSMContext) error {
-		res, _ := samuraiModel.GetList(c.Sender().Username)
-		return c.Send(res)
-	}
+
+func onHierarchy(c tele.Context, state fsm.FSMContext) error {
+	go state.Set(hierarchyState)
+	return c.Send("Выберите", keyboards.DaimyoHierarchyKB())
 }
-func showCards(db *sql.DB) fsm.Handler {
+func onReport(c tele.Context, state fsm.FSMContext) error {
+	go state.Set(reportState)
+	return c.Send("Выберите", keyboards.DaimyoReportKB())
+}
+func cardLimit(db *sql.DB) fsm.Handler {
 	cardModel := mysql.CardModel{DB: db}
 	return func(c tele.Context, state fsm.FSMContext) error {
-		res, _ := cardModel.GetList(c.Sender().Username)
-		return c.Send(res)
+		res, _ := cardModel.CardLimit(c.Sender().Username)
+		for _, v := range res {
+			c.Send(v)
+		}
+		return nil
 	}
 }
+func validTime() bool {
+	currentHour := time.Now().Hour()
+	return currentHour >= 8 && currentHour < 12
+}
+
+//	func showCards(db *sql.DB) fsm.Handler {
+//		cardModel := mysql.CardModel{DB: db}
+//		return func(c tele.Context, state fsm.FSMContext) error {
+//			res, _ := cardModel.GetList(c.Sender().Username)
+//			for _, v := range res {
+//				c.Send(v)
+//			}
+//			return nil
+//		}
+//	}
 func remainingFunds(c tele.Context, state fsm.FSMContext) error {
 	go state.Set(cardIDInputState)
 	return c.Send("Введите номер карты")

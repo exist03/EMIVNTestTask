@@ -1,6 +1,7 @@
-package handlers
+package shogun
 
 import (
+	"EMIVNTestTask/internal/handlers/states"
 	"EMIVNTestTask/internal/keyboards"
 	"EMIVNTestTask/internal/users"
 	"EMIVNTestTask/pkg/models/mysql"
@@ -11,33 +12,38 @@ import (
 )
 
 var (
-	BeginShogunState   = InputSG.New("beginShogunState")
-	daimyoIDInputState = InputSG.New("daimyoIDInputState")
+	BeginShogunState   = states.InputSG.New("beginShogunState")
+	daimyoIDInputState = states.InputSG.New("daimyoIDInputState")
 	//card create
-	onInputCardCreateState = InputSG.New("onInputCardCreateState")
-	onInputBankState       = InputSG.New("onInputBankState")
-	onInputLimitState      = InputSG.New("onInputLimitState")
+	OnInputCardCreateState = states.InputSG.New("onInputCardCreateState")
+	OnInputBankState       = states.InputSG.New("OnInputBankState")
+	OnInputLimitState      = states.InputSG.New("OnInputLimitState")
 	//card connect
-	onInputCardState      = InputSG.New("onInputCardState")
-	onInputCardOwnerState = InputSG.New("onInputCardOwnerState")
+	OnInputCardState      = states.InputSG.New("OnInputCardState")
+	OnInputCardOwnerState = states.InputSG.New("OnInputCardOwnerState")
 )
 
-func initShogunHandlers(manager *fsm.Manager, db *sql.DB) {
+func InitShogunHandlers(manager *fsm.Manager, db *sql.DB) {
 	//start buttons
 	manager.Bind(&keyboards.BtnShogun, fsm.DefaultState, onStartShogun(db))
+	//report
+	manager.Bind(&keyboards.BtnGetReport, BeginShogunState, onReport)
+	//report
+	initReportHandlers(manager, db)
+
 	manager.Bind(&keyboards.BtnShowDaimyos, BeginShogunState, showDaimyos(db))
 	manager.Bind(&keyboards.BtnShowDaimyoSamurais, BeginShogunState, getDaimyoSamurais)
 	manager.Bind(tele.OnText, daimyoIDInputState, showDaimyoSamurais(db))
 	//cards
 	//card create
-	manager.Bind(&keyboards.BtnCreateCard, BeginShogunState, onCreateCard)
-	manager.Bind(tele.OnText, onInputCardCreateState, onInputCardCreate)
-	manager.Bind(tele.OnText, onInputBankState, onInputBank)
-	manager.Bind(tele.OnText, onInputLimitState, onInputLimit(db))
+	manager.Bind(&keyboards.BtnCreateCard, BeginShogunState, OnCreateCard)
+	manager.Bind(tele.OnText, OnInputCardCreateState, OnInputCardCreate)
+	manager.Bind(tele.OnText, OnInputBankState, OnInputBank)
+	manager.Bind(tele.OnText, OnInputLimitState, OnInputLimit(db))
 	//card connect
-	manager.Bind(&keyboards.BtnConnectCard, BeginShogunState, onConnectCard)
-	manager.Bind(tele.OnText, onInputCardState, onInputCardConnect)
-	manager.Bind(tele.OnText, onInputCardOwnerState, onInputCardOwner(db))
+	manager.Bind(&keyboards.BtnConnectCard, BeginShogunState, OnConnectCard)
+	manager.Bind(tele.OnText, OnInputCardState, OnInputCardConnect)
+	manager.Bind(tele.OnText, OnInputCardOwnerState, OnInputCardOwner(db))
 }
 func onStartShogun(db *sql.DB) fsm.Handler {
 	return func(c tele.Context, state fsm.FSMContext) error {
@@ -66,6 +72,12 @@ func showDaimyos(db *sql.DB) fsm.Handler {
 	}
 }
 
+// report
+func onReport(c tele.Context, state fsm.FSMContext) error {
+	go state.Set(reportState)
+	return c.Send("Выберите", keyboards.ShogunReportPeriodKB())
+}
+
 // samurais
 func getDaimyoSamurais(c tele.Context, state fsm.FSMContext) error {
 	go state.Set(daimyoIDInputState)
@@ -82,16 +94,16 @@ func showDaimyoSamurais(db *sql.DB) fsm.Handler {
 }
 
 // connect card
-func onConnectCard(c tele.Context, state fsm.FSMContext) error {
-	go state.Set(onInputCardState)
+func OnConnectCard(c tele.Context, state fsm.FSMContext) error {
+	go state.Set(OnInputCardState)
 	return c.Send("Введите карту которую хотите привязать")
 }
-func onInputCardConnect(c tele.Context, state fsm.FSMContext) error {
+func OnInputCardConnect(c tele.Context, state fsm.FSMContext) error {
 	go state.Update("cardID", c.Text())
-	go state.Set(onInputCardOwnerState)
+	go state.Set(OnInputCardOwnerState)
 	return c.Send("Введите дайме к которому хотите привязать карту")
 }
-func onInputCardOwner(db *sql.DB) fsm.Handler {
+func OnInputCardOwner(db *sql.DB) fsm.Handler {
 	return func(c tele.Context, state fsm.FSMContext) error {
 		defer state.Set(fsm.DefaultState)
 		cardModel := mysql.CardModel{DB: db}
@@ -106,21 +118,21 @@ func onInputCardOwner(db *sql.DB) fsm.Handler {
 }
 
 // create card
-func onCreateCard(c tele.Context, state fsm.FSMContext) error {
-	go state.Set(onInputCardCreateState)
+func OnCreateCard(c tele.Context, state fsm.FSMContext) error {
+	go state.Set(OnInputCardCreateState)
 	return c.Send("Введите карту которую хотите создать")
 }
-func onInputCardCreate(c tele.Context, state fsm.FSMContext) error {
+func OnInputCardCreate(c tele.Context, state fsm.FSMContext) error {
 	go state.Update("cardID", c.Text())
-	go state.Set(onInputBankState)
+	go state.Set(OnInputBankState)
 	return c.Send("Введите банк")
 }
-func onInputBank(c tele.Context, state fsm.FSMContext) error {
+func OnInputBank(c tele.Context, state fsm.FSMContext) error {
 	go state.Update("bank", c.Text())
-	go state.Set(onInputLimitState)
+	go state.Set(OnInputLimitState)
 	return c.Send("Введите лимит")
 }
-func onInputLimit(db *sql.DB) fsm.Handler {
+func OnInputLimit(db *sql.DB) fsm.Handler {
 	return func(c tele.Context, state fsm.FSMContext) error {
 		defer state.Set(fsm.DefaultState)
 		cardModel := mysql.CardModel{DB: db}

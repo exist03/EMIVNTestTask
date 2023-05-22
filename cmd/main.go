@@ -1,7 +1,7 @@
 package main
 
 import (
-	"EMIVNTestTask/internal/handlers"
+	"EMIVNTestTask/internal/handlers/entryPoint"
 	"EMIVNTestTask/pkg/DB"
 	"github.com/joho/godotenv"
 	fsm "github.com/vitaliy-ukiru/fsm-telebot"
@@ -41,6 +41,6 @@ func main() {
 	}
 	log.Printf("db is open")
 	defer db.Close()
-	handlers.InitHandlers(bot, db, manager)
+	entryPoint.InitHandlers(bot, db, manager)
 	b.Start()
 }

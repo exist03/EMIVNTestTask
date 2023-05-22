@@ -1,6 +1,8 @@
-package handlers
+package admin
 
 import (
+	"EMIVNTestTask/internal/handlers/shogun"
+	"EMIVNTestTask/internal/handlers/states"
 	"EMIVNTestTask/internal/keyboards"
 	"EMIVNTestTask/pkg/models/mysql"
 	"database/sql"
@@ -10,17 +12,17 @@ import (
 )
 
 var (
-	onConnectDaimyoUsernameState  = InputSG.New("onConnectDaimyoUsernameState")
-	onConnectDaimyoOwnerState     = InputSG.New("onConnectDaimyoOwnerState")
-	onConnectSamuraiUsernameState = InputSG.New("onConnectSamuraiUsernameState")
-	onConnectSamuraiOwnerState    = InputSG.New("onConnectSamuraiOwnerState")
+	onConnectDaimyoUsernameState  = states.InputSG.New("onConnectDaimyoUsernameState")
+	onConnectDaimyoOwnerState     = states.InputSG.New("onConnectDaimyoOwnerState")
+	onConnectSamuraiUsernameState = states.InputSG.New("onConnectSamuraiUsernameState")
+	onConnectSamuraiOwnerState    = states.InputSG.New("onConnectSamuraiOwnerState")
 )
 
 func initConnectingHandlers(manager *fsm.Manager, db *sql.DB) {
 	//card
-	manager.Bind(&keyboards.BtnConnectCard, onConnectState, onConnectCard)
-	manager.Bind(tele.OnText, onInputCardState, onInputCardConnect)
-	manager.Bind(tele.OnText, onInputCardOwnerState, onInputCardOwner(db))
+	manager.Bind(&keyboards.BtnConnectCard, onConnectState, shogun.OnConnectCard)
+	manager.Bind(tele.OnText, shogun.OnInputCardState, shogun.OnInputCardConnect)
+	manager.Bind(tele.OnText, shogun.OnInputCardOwnerState, shogun.OnInputCardOwner(db))
 	//daimyo
 	manager.Bind(&keyboards.BtnDaimyo, onConnectState, onConnectDaimyo)
 	manager.Bind(tele.OnText, onConnectDaimyoUsernameState, onConnectDaimyoUsername)
@@ -86,6 +88,6 @@ func onConnectSamuraiOwner(db *sql.DB) fsm.Handler {
 		if err != nil {
 			return c.Send("Произошла ошбика", keyboards.AdminKB())
 		}
-		return c.Send("Дайме привязан", keyboards.AdminKB())
+		return c.Send("Самурай привязан", keyboards.AdminKB())
 	}
 }
